@@ -3,6 +3,7 @@ package com.softexpert.repository;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -15,7 +16,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 @Stateless
 public class DefaultRepository<T> {
 
-	@PersistenceContext(name = "ExampleDS")
+	@Inject
 	private EntityManager entityManager;
 
 	public T findById(Long id, Class<T> entityClass) {
