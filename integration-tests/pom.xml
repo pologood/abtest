@@ -92,12 +92,24 @@
 					<artifactId>wildfly-arquillian-container-embedded</artifactId>
 					<version>1.0.1.Final</version>
 					<scope>test</scope>
+					<exclusions>
+						<exclusion>
+							<groupId>org.jboss.stdio</groupId>
+							<artifactId>jboss-stdio</artifactId>
+						</exclusion>
+					</exclusions>
 				</dependency>
 				<dependency>
 					<groupId>org.wildfly</groupId>
 					<artifactId>wildfly-embedded</artifactId>
 					<version>9.0.2.Final</version>
 					<scope>test</scope>
+					<exclusions>
+						<exclusion>
+							<groupId>org.jboss.stdio</groupId>
+							<artifactId>jboss-stdio</artifactId>
+						</exclusion>
+					</exclusions>
 				</dependency>
 				<dependency>
 					<groupId>org.jboss.arquillian.extension</groupId>
