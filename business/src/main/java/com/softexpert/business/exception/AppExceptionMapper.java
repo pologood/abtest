@@ -9,7 +9,10 @@ import javax.ws.rs.ext.Provider;
 public class AppExceptionMapper implements ExceptionMapper<AppException> {
 
 	public Response toResponse(AppException ex) {
-		return Response.status(ex.status).entity(ex.getMessage()).type(MediaType.APPLICATION_JSON).build();
+		return Response.status(ex.status)
+				.entity(ex.getMessage())
+				.type(MediaType.APPLICATION_JSON)
+				.build();
 	}
 
 }
