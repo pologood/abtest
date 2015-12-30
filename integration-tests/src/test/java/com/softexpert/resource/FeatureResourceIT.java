@@ -9,8 +9,10 @@ import java.util.List;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -24,10 +26,10 @@ import org.junit.Test;
 import org.junit.experimental.theories.Theories;
 import org.junit.runner.RunWith;
 
-import com.softexpert.persistence.SampleEntity;
+import com.softexpert.persistence.Feature;
 
 @RunWith(Arquillian.class)
-public class SampleEntityResourceIT {
+public class FeatureResourceIT {
 
 	@ArquillianResource
 	private URI base;
@@ -36,7 +38,7 @@ public class SampleEntityResourceIT {
 
 	@Deployment(testable = false)
 	public static WebArchive deploy() {
-		URL webXML = SampleEntityResourceIT.class.getResource("web.xml");
+		URL webXML = FeatureResourceIT.class.getResource("web.xml");
 		File[] archives = Maven.resolver().loadPomFromFile("pom.xml")
 				.importRuntimeDependencies()
 				.resolve()
@@ -51,7 +53,7 @@ public class SampleEntityResourceIT {
 	public void getSamples() throws Exception {
 		Client client = ClientBuilder.newClient();
 		target = client.target(base);
-		List<SampleEntity> response = list("dasdasdadsa");
+		List<Feature> response = list("dasdasdadsa");
 		MatcherAssert.assertThat(response, Matchers.hasSize(0));
 	}
 
@@ -59,8 +61,8 @@ public class SampleEntityResourceIT {
 	public void post() throws Exception {
 		Client client = ClientBuilder.newClient();
 		target = client.target(base);
-		SampleEntity entity = create("name");
-		SampleEntity response = post(entity);
+		Feature entity = create("name");
+		Feature response = post(entity);
 		MatcherAssert.assertThat(response.id, Matchers.notNullValue());
 		MatcherAssert.assertThat(response.name, Matchers.equalTo(entity.name));
 	}
@@ -69,27 +71,27 @@ public class SampleEntityResourceIT {
 	public void list() throws Exception {
 		Client client = ClientBuilder.newClient();
 		target = client.target(base);
-		SampleEntity entity = create("new name");
+		Feature entity = create("new name");
 		post(entity);
-		List<SampleEntity> list = list(entity.name);
+		List<Feature> list = list(entity.name);
 		MatcherAssert.assertThat(list, Matchers.hasSize(1));
 	}
 
-	private SampleEntity post(SampleEntity entity) {
-		return target.path("/v1/samples")
+	private Feature post(Feature entity) {
+		return target.path("/v1/features")
 				.request(MediaType.APPLICATION_JSON)
-				.post(Entity.entity(entity, MediaType.APPLICATION_JSON_TYPE), SampleEntity.class);
+				.post(Entity.entity(entity, MediaType.APPLICATION_JSON_TYPE), Feature.class);
 	}
 
-	private List<SampleEntity> list(String search) {
-		return target.path("/v1/samples").queryParam("search", search)
+	private List<Feature> list(String search) {
+		return target.path("/v1/features").queryParam("search", search)
 				.request(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON)
 				.get(List.class);
 	}
 
-	private SampleEntity create(String name) {
-		SampleEntity entity = new SampleEntity();
+	private Feature create(String name) {
+		Feature entity = new Feature();
 		entity.name = name;
 		return entity;
 	}
