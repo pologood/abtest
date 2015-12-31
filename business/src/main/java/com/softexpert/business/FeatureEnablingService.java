@@ -14,16 +14,17 @@ public class FeatureEnablingService {
 
 	public void toggle(Long id, Boolean state) throws FeatureEnablingException {
 		long linesChanged = executeUpdate(id, state);
-		if(!hasChangedState(linesChanged))
+		if(!hasExecutedUpdate(linesChanged))
 			throw new FeatureEnablingException("Teste já está desabilito/habilitado");
-	}
-
-	private boolean hasChangedState(long linesChanged) {
-		return linesChanged > 0;
 	}
 
 	private long executeUpdate(Long id, Boolean state) {
 		return repository.toogleState(state, feature.id.eq(id).and(feature.enabled.eq(!state)));
 	}
+	
+	private boolean hasExecutedUpdate(long linesChanged) {
+		return linesChanged > 0;
+	}
+
 
 }
