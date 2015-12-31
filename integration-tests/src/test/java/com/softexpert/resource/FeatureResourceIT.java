@@ -1,7 +1,6 @@
 package com.softexpert.resource;
 
 import java.io.File;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
@@ -9,10 +8,8 @@ import java.util.List;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -23,7 +20,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
-import org.junit.experimental.theories.Theories;
 import org.junit.runner.RunWith;
 
 import com.softexpert.persistence.Feature;
