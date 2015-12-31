@@ -4,20 +4,23 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.Size;
 
 import lombok.EqualsAndHashCode;
 
 @Entity
-@EqualsAndHashCode
-public class SampleEntity {
+@EqualsAndHashCode(callSuper=false, of="id")
+@SequenceGenerator(name="seq_feature", initialValue=1)
+public class Feature {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq_feature")
 	public Long id;
-	@NotNull(message = "Nome do tributo não pode ser nulo")
-	@Size(min = 1, message = "Nome do tributo deve conter letras, exemplo IPI")
+	
+	@Size(min = 1)
 	public String name;
+	
+	public Boolean enabled;
 	
 }

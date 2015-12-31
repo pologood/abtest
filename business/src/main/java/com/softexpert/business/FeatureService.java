@@ -1,6 +1,5 @@
 package com.softexpert.business;
 
-
 import java.util.List;
 import java.util.Set;
 
@@ -15,34 +14,34 @@ import com.google.common.base.Strings;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.EntityPathBase;
+import com.softexpert.persistence.QFeature;
 import com.softexpert.business.exception.AppException;
-import com.softexpert.persistence.QSampleEntity;
-import com.softexpert.persistence.SampleEntity;
+import com.softexpert.persistence.Feature;
 import com.softexpert.repository.DefaultRepository;
 
 @Stateless
-public class SampleEntityService  {
+public class FeatureService {
 
 	private static final String DELETE_ERROR = "Ops... registro não pode ser removido ou está send utilizado.";
 	private static final String COULD_NOT_EDIT_ERROR = "Ops... registro não pode ser editado, verifique se todos os dados então preenchidos corretamente.";
 	private static final String SAVE_ERROR = "Ops... erro ao salvar, verifique se todos os dados então preenchidos corretamente :(";
 	private static final String SEARCH_ERROR = "Ops... ocorreu erro ao buscas, registro pode não existir mais.";
-	
+
 	@Inject
-	protected DefaultRepository<SampleEntity> repository;
+	protected DefaultRepository<Feature> repository;
 	@Inject
 	private Validator validator;
 
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public SampleEntity find(Long id) throws AppException {
+	public Feature find(Long id) throws AppException {
 		try {
-			return repository.findById(id, getEntityClass());
+			return repository.findById(id, Feature.class);
 		} catch (Exception e) {
 			throw new AppException(SEARCH_ERROR);
 		}
 	}
 
-	public SampleEntity create(SampleEntity entity) throws AppException {
+	public Feature create(Feature entity) throws AppException {
 		validation(entity);
 		try {
 			return repository.save(entity);
@@ -52,13 +51,13 @@ public class SampleEntityService  {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<SampleEntity> list(String schearch) {
+	public List<Feature> list(String schearch) {
 		if (Strings.isNullOrEmpty(schearch))
-			return repository.all(getEntityPathBase(), getSelect());
-		return repository.list(getEntityPathBase(), getFilter(schearch), getSelect());
+			return repository.all(QFeature.feature, QFeature.feature);
+		return repository.list(QFeature.feature, QFeature.feature.name.containsIgnoreCase(schearch), QFeature.feature);
 	}
 
-	public SampleEntity edit(SampleEntity entity) throws AppException {
+	public Feature edit(Feature entity) throws AppException {
 		validation(entity);
 		try {
 			return repository.edit(entity);
@@ -75,27 +74,11 @@ public class SampleEntityService  {
 			throw new AppException(DELETE_ERROR);
 		}
 	}
-	
-	private void validation(SampleEntity entity) throws AppException {
-		Set<ConstraintViolation<SampleEntity>> violations = validator.validate(entity);
+
+	private void validation(Feature entity) throws AppException {
+		Set<ConstraintViolation<Feature>> violations = validator.validate(entity);
 		if (!violations.isEmpty())
 			throw new AppException(violations.iterator().next().getMessage());
-	}
-	
-	protected EntityPathBase<SampleEntity> getEntityPathBase() {
-		return QSampleEntity.sampleEntity;
-	}
-
-	protected Class<SampleEntity> getEntityClass() {
-		return SampleEntity.class;
-	}
-
-	protected Expression<SampleEntity> getSelect() {
-		return  QSampleEntity.sampleEntity;
-	}
-
-	protected Predicate getFilter(String schearch) {
-		return  QSampleEntity.sampleEntity.name.containsIgnoreCase(schearch);
 	}
 
 }

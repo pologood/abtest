@@ -1,6 +1,6 @@
 package com.softexpert.repository;
 
-import static com.softexpert.persistence.QSampleEntity.sampleEntity;
+import static com.softexpert.persistence.QFeature.feature;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.util.Arrays;
@@ -19,7 +19,7 @@ import org.mockito.Spy;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
-import com.softexpert.persistence.SampleEntity;
+import com.softexpert.persistence.Feature;
 import com.softexpert.repository.DefaultRepository;
 
 public class DefaultRepositoryTest {
@@ -27,11 +27,11 @@ public class DefaultRepositoryTest {
 	private static final long DUMMY_ID = 1L;
 	@Spy
 	@InjectMocks
-	private DefaultRepository<SampleEntity> repository;
+	private DefaultRepository<Feature> repository;
 	@Mock
 	private EntityManager entityManager;
 	@Mock
-	private JPAQuery<SampleEntity> jpaQuery;
+	private JPAQuery<Feature> jpaQuery;
 
 	@Before
 	public void init() {
@@ -41,14 +41,14 @@ public class DefaultRepositoryTest {
 
 	@Test
 	public void findById() {
-		Mockito.when(entityManager.find(SampleEntity.class, DUMMY_ID)).thenReturn(createSample());
-		SampleEntity sample= repository.findById(1L, SampleEntity.class);
+		Mockito.when(entityManager.find(Feature.class, DUMMY_ID)).thenReturn(createSample());
+		Feature sample= repository.findById(1L, Feature.class);
 		MatcherAssert.assertThat(sample.id, Matchers.equalTo(DUMMY_ID));
 	}
 
 	@Test
 	public void save() {
-		SampleEntity entity = createSample();
+		Feature entity = createSample();
 		entity = repository.save(entity);
 		Mockito.verify(entityManager).persist(entity);
 		Mockito.verify(entityManager, Mockito.never()).merge(entity);
@@ -56,7 +56,7 @@ public class DefaultRepositoryTest {
 
 	@Test
 	public void edit() {
-		SampleEntity entity = createSample();
+		Feature entity = createSample();
 		repository.edit(entity);
 		Mockito.verify(entityManager, Mockito.never()).persist(entity);
 		Mockito.verify(entityManager).merge(entity);
@@ -64,40 +64,40 @@ public class DefaultRepositoryTest {
 
 	@Test
 	public void delete() {
-		SampleEntity entity = createSample();
+		Feature entity = createSample();
 		repository.delete(entity);
 		Mockito.verify(entityManager).remove(entity);
 	}
 
 	@Test
 	public void list() {
-		BooleanExpression expression = sampleEntity.id.eq(DUMMY_ID);
-		Mockito.when(jpaQuery.select(sampleEntity)).thenReturn(jpaQuery);
-		Mockito.when(jpaQuery.from(sampleEntity)).thenReturn(jpaQuery);
+		BooleanExpression expression = feature.id.eq(DUMMY_ID);
+		Mockito.when(jpaQuery.select(feature)).thenReturn(jpaQuery);
+		Mockito.when(jpaQuery.from(feature)).thenReturn(jpaQuery);
 		Mockito.when(jpaQuery.where(expression)).thenReturn(jpaQuery);
 		Mockito.when(jpaQuery.fetch()).thenReturn(Arrays.asList(createSample(), createSample()));
-		List<SampleEntity> list = repository.list(sampleEntity, expression, sampleEntity);
+		List<Feature> list = repository.list(feature, expression, feature);
 		MatcherAssert.assertThat(list, Matchers.hasSize(2));
-		Mockito.verify(jpaQuery).select(sampleEntity);
-		Mockito.verify(jpaQuery).from(sampleEntity);
+		Mockito.verify(jpaQuery).select(feature);
+		Mockito.verify(jpaQuery).from(feature);
 		Mockito.verify(jpaQuery).where(expression);
 		Mockito.verify(jpaQuery).fetch();
 	}
 
 	@Test
 	public void all() {
-		Mockito.when(jpaQuery.select(sampleEntity)).thenReturn(jpaQuery);
-		Mockito.when(jpaQuery.from(sampleEntity)).thenReturn(jpaQuery);
+		Mockito.when(jpaQuery.select(feature)).thenReturn(jpaQuery);
+		Mockito.when(jpaQuery.from(feature)).thenReturn(jpaQuery);
 		Mockito.when(jpaQuery.fetch()).thenReturn(Arrays.asList(createSample(), createSample()));
-		List<SampleEntity> list = repository.all(sampleEntity, sampleEntity);
+		List<Feature> list = repository.all(feature, feature);
 		MatcherAssert.assertThat(list, Matchers.hasSize(2));
-		Mockito.verify(jpaQuery).select(sampleEntity);
-		Mockito.verify(jpaQuery).from(sampleEntity);
+		Mockito.verify(jpaQuery).select(feature);
+		Mockito.verify(jpaQuery).from(feature);
 		Mockito.verify(jpaQuery).fetch();
 	}
 
-	private SampleEntity createSample() {
-		SampleEntity sampleEntity = new SampleEntity();
+	private Feature createSample() {
+		Feature sampleEntity = new Feature();
 		sampleEntity.id = DUMMY_ID;
 		return sampleEntity;
 	}
