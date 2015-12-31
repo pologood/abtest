@@ -32,7 +32,7 @@ public class FeatureResource {
 	private FeatureEnablingService featureEnablingService;
 
 	@GET
-	public List<Feature> get(@QueryParam("search") String search) {
+	public List<Feature> list(@QueryParam("search") String search) {
 		return service.list(search);
 	}
 
@@ -43,7 +43,7 @@ public class FeatureResource {
 
 	@PUT
 	@Path("/{id}/enabling")
-	public void toogle(@PathParam("id") Long id, Boolean enabling) throws FeatureEnablingException {
+	public void enabling(@PathParam("id") Long id, Boolean enabling) throws FeatureEnablingException {
 		featureEnablingService.enabling(id, enabling);
 	}
 
