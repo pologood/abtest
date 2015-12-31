@@ -5,7 +5,6 @@ import static com.softexpert.persistence.QFeature.feature;
 import javax.inject.Inject;
 
 import com.softexpert.business.exception.FeatureEnablingException;
-import com.softexpert.persistence.QFeature;
 import com.softexpert.repository.FeatureRepository;
 
 public class FeatureEnablingService {
@@ -13,14 +12,14 @@ public class FeatureEnablingService {
 	@Inject
 	private FeatureRepository repository;
 
-	public boolean toggle(Long id, Boolean state) throws FeatureEnablingException {
-		if (updateState(id, state))
-			return state;
-		throw new FeatureEnablingException("Teste já está desabilito/habilitado");
+	public void toggle(Long id, Boolean state) throws FeatureEnablingException {
+		long linesChanged = executeUpdate(id, state);
+		if(!hasChangedState(linesChanged))
+			throw new FeatureEnablingException("Teste já está desabilito/habilitado");
 	}
 
-	private boolean updateState(Long id, Boolean state) {
-		return executeUpdate(id, state) > 0;
+	private boolean hasChangedState(long linesChanged) {
+		return linesChanged > 0;
 	}
 
 	private long executeUpdate(Long id, Boolean state) {
