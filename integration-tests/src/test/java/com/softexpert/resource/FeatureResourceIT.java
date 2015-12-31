@@ -19,6 +19,7 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -40,46 +41,83 @@ public class FeatureResourceIT {
 		return ShrinkWrap.create(WebArchive.class).setWebXML(webXML).addAsLibraries(archives);
 	}
 
-	@Test
-	public void getSamples() throws Exception {
+	@Before
+	public void init() throws Exception {
 		Client client = ClientBuilder.newClient();
 		target = client.target(base);
+	}
+
+	@Test
+	public void getSamples() throws Exception {
 		List<Feature> response = list("dasdasdadsa");
 		MatcherAssert.assertThat(response, Matchers.hasSize(0));
 	}
 
 	@Test
 	public void post() throws Exception {
-		Client client = ClientBuilder.newClient();
-		target = client.target(base);
-		Feature entity = create("name");
-		Feature response = post(entity);
-		MatcherAssert.assertThat(response.id, Matchers.notNullValue());
-		MatcherAssert.assertThat(response.name, Matchers.equalTo(entity.name));
+		String name = "name";
+		Feature entity = post(name, true);
+		MatcherAssert.assertThat(entity.id, Matchers.notNullValue());
+		MatcherAssert.assertThat(entity.name, Matchers.equalTo(name));
 	}
 
 	@Test
 	public void list() throws Exception {
-		Client client = ClientBuilder.newClient();
-		target = client.target(base);
-		Feature entity = create("new name");
-		post(entity);
-		List<Feature> list = list(entity.name);
+		String name = "new name";
+		post(name, true);
+		List<Feature> list = list(name);
 		MatcherAssert.assertThat(list, Matchers.hasSize(1));
 	}
 
-	private Feature post(Feature entity) {
-		return target.path("/v1/features").request(MediaType.APPLICATION_JSON)
+	@Test
+	public void disable() throws Exception {
+		Feature entity = post("disable", true);
+		int httpStatus = enabling(entity.id, false);
+		MatcherAssert.assertThat(httpStatus, Matchers.equalTo(204));
+	}
+	
+	@Test
+	public void disableWithError() throws Exception {
+		Feature entity = post("disable2", true);
+		enabling(entity.id, false);
+		int httpStatus = enabling(entity.id, false);
+		MatcherAssert.assertThat(httpStatus, Matchers.equalTo(404));
+	}
+	
+	@Test
+	public void enabled() throws Exception {
+		Feature entity = post("enabled", false);
+		int httpStatus = enabling(entity.id, true);
+		MatcherAssert.assertThat(httpStatus, Matchers.equalTo(204));
+	}
+	
+	@Test
+	public void enabledWithError() throws Exception {
+		Feature entity = post("enabled2", false);
+		enabling(entity.id, true);
+		int httpStatus = enabling(entity.id, true);
+		MatcherAssert.assertThat(httpStatus, Matchers.equalTo(404));
+	}
+
+	private Feature post(String name, boolean enabled) {
+		Feature entity =  Feature.builder().name(name).enabled(enabled).build();
+		return target.path("/v1/features")
+				.request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(entity, MediaType.APPLICATION_JSON_TYPE), Feature.class);
 	}
 
 	private List<Feature> list(String search) {
-		return target.path("/v1/features").queryParam("search", search).request(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON).get(List.class);
+		return target.path("/v1/features").queryParam("search", search)
+				.request(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.get(List.class);
 	}
 
-	private Feature create(String name) {
-		return Feature.builder().name(name).build();
+	private int enabling(long id, boolean state){
+		return target.path("/v1/features/"+id+"/enabling")
+			.request(MediaType.APPLICATION_JSON)
+			.put(Entity.entity(state, MediaType.APPLICATION_JSON_TYPE))
+			.getStatus();
 	}
 
 }

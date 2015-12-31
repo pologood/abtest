@@ -30,27 +30,27 @@ public class FeatureEnablingServiceTest {
 	@Test
 	public void enableFeature()  throws FeatureEnablingException{
 		Mockito.when(repository.toogleState(true, createPredicate(ID, false))).thenReturn(1L);
-		service.toggle(ID, true);
+		service.enabling(ID, true);
 		Mockito.verify(repository).toogleState(true, createPredicate(ID, false));
 	}
 	
 	@Test
 	public void disbleFeature()  throws FeatureEnablingException{
 		Mockito.when(repository.toogleState(false, createPredicate(ID, true))).thenReturn(1L);
-		service.toggle(ID, false);
+		service.enabling(ID, false);
 		Mockito.verify(repository).toogleState(false, createPredicate(ID, true));
 	}
 	
 	@Test(expected=FeatureEnablingException.class)
 	public void enableFeatureWhenItEnabled()  throws FeatureEnablingException{
 		Mockito.when(repository.toogleState(true, createPredicate(ID, false))).thenReturn(0L);
-		service.toggle(ID, true);
+		service.enabling(ID, true);
 	}
 	
 	@Test(expected=FeatureEnablingException.class)
 	public void disableFeatureWhenItDisabled()  throws FeatureEnablingException{
 		Mockito.when(repository.toogleState(false, createPredicate(ID, true))).thenReturn(0L);
-		service.toggle(ID, false);
+		service.enabling(ID, false);
 	}
 
 
