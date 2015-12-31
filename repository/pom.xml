@@ -11,6 +11,15 @@
 	</parent>
 	<artifactId>repository</artifactId>
 
+	<properties>
+		<test.mutation>true</test.mutation>
+		<test.totalMutation>0</test.totalMutation>
+		<lineRate>0</lineRate>
+		<branchRate>0</branchRate>
+		<totalLineRate>0</totalLineRate>
+		<totalBranchRate>0</totalBranchRate>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>javax</groupId>

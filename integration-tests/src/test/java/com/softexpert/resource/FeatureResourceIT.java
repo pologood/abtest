@@ -39,14 +39,9 @@ public class FeatureResourceIT {
 	@Deployment(testable = false)
 	public static WebArchive deploy() {
 		URL webXML = FeatureResourceIT.class.getResource("web.xml");
-		File[] archives = Maven.resolver().loadPomFromFile("pom.xml")
-				.importRuntimeDependencies()
-				.resolve()
-				.withTransitivity()
-				.asFile();
-		return ShrinkWrap.create(WebArchive.class)
-				.setWebXML(webXML)
-				.addAsLibraries(archives);
+		File[] archives = Maven.resolver().loadPomFromFile("pom.xml").importRuntimeDependencies().resolve()
+				.withTransitivity().asFile();
+		return ShrinkWrap.create(WebArchive.class).setWebXML(webXML).addAsLibraries(archives);
 	}
 
 	@Test
@@ -78,22 +73,17 @@ public class FeatureResourceIT {
 	}
 
 	private Feature post(Feature entity) {
-		return target.path("/v1/features")
-				.request(MediaType.APPLICATION_JSON)
+		return target.path("/v1/features").request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(entity, MediaType.APPLICATION_JSON_TYPE), Feature.class);
 	}
 
 	private List<Feature> list(String search) {
-		return target.path("/v1/features").queryParam("search", search)
-				.request(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(List.class);
+		return target.path("/v1/features").queryParam("search", search).request(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON).get(List.class);
 	}
 
 	private Feature create(String name) {
-		Feature entity = new Feature();
-		entity.name = name;
-		return entity;
+		return Feature.builder().name(name).build();
 	}
 
 }

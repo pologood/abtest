@@ -66,7 +66,6 @@ public class FeatureService {
 		}
 	}
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public void delete(Long id) throws AppException {
 		try {
 			repository.delete(find(id));

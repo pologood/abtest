@@ -7,11 +7,13 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.Size;
 
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 
 @Entity
 @EqualsAndHashCode(callSuper=false, of="id")
 @SequenceGenerator(name="seq_feature", initialValue=1)
+@Builder
 public class Feature {
 
 	@Id
