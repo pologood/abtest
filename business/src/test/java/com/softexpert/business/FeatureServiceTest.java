@@ -40,10 +40,10 @@ public class FeatureServiceTest {
 		MockitoAnnotations.initMocks(this);
 	}
 
-	@Test(expected=AppException.class)
+	@Test(expected = AppException.class)
 	public void createWithValidationError() throws AppException {
 		Feature sample = create(ID, "IPI");
-		Set<ConstraintViolation<Feature>> violations =  new HashSet<>();
+		Set<ConstraintViolation<Feature>> violations = new HashSet<>();
 		ConstraintViolation constraintViolation = Mockito.mock(ConstraintViolation.class);
 		violations.add(constraintViolation);
 		Mockito.when(constraintViolation.getMessage()).thenReturn("Error");
@@ -62,7 +62,7 @@ public class FeatureServiceTest {
 		Mockito.verify(repository).save(sample);
 		MatcherAssert.assertThat(newSample.id, Matchers.equalTo(ID));
 	}
-	
+
 	@Test
 	public void edit() throws AppException {
 		Feature sample = create(ID, "IPI");
@@ -83,8 +83,8 @@ public class FeatureServiceTest {
 
 		Mockito.verify(repository).delete(create(ID, null));
 	}
-	
-	@Test(expected=AppException.class)
+
+	@Test(expected = AppException.class)
 	public void deleteWithError() throws AppException {
 		Mockito.when(repository.findById(ID, Feature.class)).thenThrow(new IllegalArgumentException("Error"));
 
@@ -118,8 +118,7 @@ public class FeatureServiceTest {
 	public void getFilter() throws AppException {
 		String schearch = "Lala";
 		Predicate filter = getFilter(schearch);
-		MatcherAssert.assertThat(filter,
-				Matchers.equalTo(QFeature.feature.name.containsIgnoreCase(schearch)));
+		MatcherAssert.assertThat(filter, Matchers.equalTo(QFeature.feature.name.containsIgnoreCase(schearch)));
 	}
 
 	@Test(expected = AppException.class)
@@ -155,16 +154,16 @@ public class FeatureServiceTest {
 	private Predicate getFilter(String schearch) {
 		return QFeature.feature.name.containsIgnoreCase(schearch);
 	}
-	
+
 	private List<Feature> getList() {
 		return Collections.singletonList(create(ID, null));
 	}
 
 	private Feature create(Long id, String name) {
-		Feature sample = new Feature();
-		sample.id = id;
-		sample.name = name;
-		return sample;
+		return Feature.builder()
+				.id(id)
+				.name(name)
+				.build();
 	}
-	
+
 }

@@ -97,8 +97,6 @@ public class DefaultRepositoryTest {
 	}
 
 	private Feature createSample() {
-		Feature sampleEntity = new Feature();
-		sampleEntity.id = DUMMY_ID;
-		return sampleEntity;
+		return Feature.builder().id(DUMMY_ID).build();
 	}
 }

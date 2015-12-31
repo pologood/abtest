@@ -1,7 +1,6 @@
 package com.softexpert.resource;
 
 import java.io.File;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
@@ -9,10 +8,8 @@ import java.util.List;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -23,7 +20,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
-import org.junit.experimental.theories.Theories;
 import org.junit.runner.RunWith;
 
 import com.softexpert.persistence.Feature;
@@ -39,14 +35,9 @@ public class FeatureResourceIT {
 	@Deployment(testable = false)
 	public static WebArchive deploy() {
 		URL webXML = FeatureResourceIT.class.getResource("web.xml");
-		File[] archives = Maven.resolver().loadPomFromFile("pom.xml")
-				.importRuntimeDependencies()
-				.resolve()
-				.withTransitivity()
-				.asFile();
-		return ShrinkWrap.create(WebArchive.class)
-				.setWebXML(webXML)
-				.addAsLibraries(archives);
+		File[] archives = Maven.resolver().loadPomFromFile("pom.xml").importRuntimeDependencies().resolve()
+				.withTransitivity().asFile();
+		return ShrinkWrap.create(WebArchive.class).setWebXML(webXML).addAsLibraries(archives);
 	}
 
 	@Test
@@ -78,22 +69,17 @@ public class FeatureResourceIT {
 	}
 
 	private Feature post(Feature entity) {
-		return target.path("/v1/features")
-				.request(MediaType.APPLICATION_JSON)
+		return target.path("/v1/features").request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(entity, MediaType.APPLICATION_JSON_TYPE), Feature.class);
 	}
 
 	private List<Feature> list(String search) {
-		return target.path("/v1/features").queryParam("search", search)
-				.request(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(List.class);
+		return target.path("/v1/features").queryParam("search", search).request(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON).get(List.class);
 	}
 
 	private Feature create(String name) {
-		Feature entity = new Feature();
-		entity.name = name;
-		return entity;
+		return Feature.builder().name(name).build();
 	}
 
 }
