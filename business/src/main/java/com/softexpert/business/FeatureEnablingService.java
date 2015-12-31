@@ -12,7 +12,7 @@ public class FeatureEnablingService {
 	@Inject
 	private FeatureRepository repository;
 
-	public void toggle(Long id, Boolean state) throws FeatureEnablingException {
+	public void enabling(Long id, Boolean state) throws FeatureEnablingException {
 		long linesChanged = executeUpdate(id, state);
 		if(!hasExecutedUpdate(linesChanged))
 			throw new FeatureEnablingException("Teste já está desabilito/habilitado");
