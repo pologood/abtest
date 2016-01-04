@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
@@ -19,22 +20,27 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.Projections;
 import com.softexpert.business.exception.AppException;
 import com.softexpert.persistence.Feature;
 import com.softexpert.persistence.QFeature;
 import com.softexpert.repository.DefaultRepository;
+import com.softexpert.repository.FeatureRepository;
 
 public class FeatureServiceTest {
 
 	private static final long ID = 1L;
 	@InjectMocks
-	private FeatureService service;
+	private FeatureLoadService service;
 	@Mock
 	private DefaultRepository<Feature> repository;
 	@Mock
 	private Validator validator;
-
+	@Mock
+	private FeatureRepository featureRepository;
+	
 	@Before
 	public void init() {
 		MockitoAnnotations.initMocks(this);
@@ -77,7 +83,7 @@ public class FeatureServiceTest {
 
 	@Test
 	public void delete() throws AppException {
-		Mockito.when(repository.findById(ID, Feature.class)).thenReturn(create(ID, null));
+		Mockito.when(featureRepository.findById(ID)).thenReturn(create(ID, null));
 
 		service.delete(ID);
 
@@ -86,7 +92,7 @@ public class FeatureServiceTest {
 
 	@Test(expected = AppException.class)
 	public void deleteWithError() throws AppException {
-		Mockito.when(repository.findById(ID, Feature.class)).thenThrow(new IllegalArgumentException("Error"));
+		Mockito.when(featureRepository.findById(ID)).thenThrow(new IllegalArgumentException("Error"));
 
 		service.delete(ID);
 
@@ -95,10 +101,10 @@ public class FeatureServiceTest {
 
 	@Test
 	public void listAll() {
-		Mockito.when(repository.all(QFeature.feature, QFeature.feature)).thenReturn(getList());
+		Mockito.when(repository.all(QFeature.feature, createConstructiorExpression())).thenReturn(getList());
 		List<Feature> list = service.list("");
 
-		Mockito.verify(repository).all(QFeature.feature, QFeature.feature);
+		Mockito.verify(repository).all(QFeature.feature, createConstructiorExpression());
 
 		MatcherAssert.assertThat(list, Matchers.hasSize(1));
 		MatcherAssert.assertThat(list, Matchers.contains(create(ID, null)));
@@ -106,11 +112,11 @@ public class FeatureServiceTest {
 
 	@Test
 	public void find() throws AppException {
-		Mockito.when(repository.findById(ID, Feature.class)).thenReturn(create(ID, null));
+		Mockito.when(featureRepository.findById(ID)).thenReturn(create(ID, null));
 
 		Feature sample = service.find(ID);
 
-		Mockito.verify(repository).findById(ID, Feature.class);
+		Mockito.verify(featureRepository).findById(ID);
 		MatcherAssert.assertThat(sample, Matchers.equalTo(create(ID, null)));
 	}
 
@@ -123,7 +129,7 @@ public class FeatureServiceTest {
 
 	@Test(expected = AppException.class)
 	public void findByIdWithError() throws AppException {
-		when(repository.findById(ID, Feature.class)).thenThrow(new IllegalArgumentException("Error"));
+		when(featureRepository.findById(ID)).thenThrow(new IllegalArgumentException("Error"));
 		service.find(ID);
 	}
 
@@ -142,13 +148,17 @@ public class FeatureServiceTest {
 	@Test
 	public void listWithError() {
 		String schearch = "search";
-		Mockito.when(repository.list(QFeature.feature, getFilter(schearch), QFeature.feature)).thenReturn(getList());
+		Mockito.when(repository.list(QFeature.feature, getFilter(schearch), createConstructiorExpression())).thenReturn(getList());
 		List<Feature> list = service.list(schearch);
 
-		Mockito.verify(repository).list(QFeature.feature, getFilter(schearch), QFeature.feature);
+		Mockito.verify(repository).list(QFeature.feature, getFilter(schearch), createConstructiorExpression());
 
 		MatcherAssert.assertThat(list, Matchers.hasSize(1));
 		MatcherAssert.assertThat(list, Matchers.contains(create(ID, null)));
+	}
+
+	private ConstructorExpression<Feature> createConstructiorExpression() {
+		return Projections.constructor(Feature.class,QFeature.feature.id, QFeature.feature.name, QFeature.feature.enabled, QFeature.feature.percentage);
 	}
 
 	private Predicate getFilter(String schearch) {

@@ -16,6 +16,6 @@ public class UserTest {
 	@ManyToOne(fetch = FetchType.LAZY)
 	public User user;
 	@ManyToOne(fetch = FetchType.LAZY)
-	public Test test; 
+	public ABTest test; 
 	
 }

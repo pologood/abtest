@@ -2,11 +2,13 @@ package com.softexpert.business;
 
 import static com.softexpert.persistence.QFeature.feature;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import com.softexpert.business.exception.FeatureEnablingException;
 import com.softexpert.repository.FeatureRepository;
 
+@Stateless
 public class FeatureEnablingService {
 
 	@Inject
