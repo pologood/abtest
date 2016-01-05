@@ -1,6 +1,6 @@
 package com.softexpert.repository;
 
-import static com.softexpert.persistence.QFeature.feature;
+import static com.softexpert.persistence.QExperiment.experiment;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.util.Arrays;
@@ -19,7 +19,7 @@ import org.mockito.Spy;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
-import com.softexpert.persistence.Feature;
+import com.softexpert.persistence.Experiment;
 import com.softexpert.repository.DefaultRepository;
 
 public class DefaultRepositoryTest {
@@ -27,11 +27,11 @@ public class DefaultRepositoryTest {
 	private static final long DUMMY_ID = 1L;
 	@Spy
 	@InjectMocks
-	private DefaultRepository<Feature> repository;
+	private DefaultRepository<Experiment> repository;
 	@Mock
 	private EntityManager entityManager;
 	@Mock
-	private JPAQuery<Feature> jpaQuery;
+	private JPAQuery<Experiment> jpaQuery;
 
 	@Before
 	public void init() {
@@ -41,7 +41,7 @@ public class DefaultRepositoryTest {
 
 	@Test
 	public void save() {
-		Feature entity = createSample();
+		Experiment entity = createSample();
 		entity = repository.save(entity);
 		Mockito.verify(entityManager).persist(entity);
 		Mockito.verify(entityManager, Mockito.never()).merge(entity);
@@ -49,7 +49,7 @@ public class DefaultRepositoryTest {
 
 	@Test
 	public void edit() {
-		Feature entity = createSample();
+		Experiment entity = createSample();
 		repository.edit(entity);
 		Mockito.verify(entityManager, Mockito.never()).persist(entity);
 		Mockito.verify(entityManager).merge(entity);
@@ -57,32 +57,32 @@ public class DefaultRepositoryTest {
 
 	@Test
 	public void list() {
-		BooleanExpression expression = feature.id.eq(DUMMY_ID);
-		Mockito.when(jpaQuery.select(feature)).thenReturn(jpaQuery);
-		Mockito.when(jpaQuery.from(feature)).thenReturn(jpaQuery);
+		BooleanExpression expression = experiment.id.eq(DUMMY_ID);
+		Mockito.when(jpaQuery.select(experiment)).thenReturn(jpaQuery);
+		Mockito.when(jpaQuery.from(experiment)).thenReturn(jpaQuery);
 		Mockito.when(jpaQuery.where(expression)).thenReturn(jpaQuery);
 		Mockito.when(jpaQuery.fetch()).thenReturn(Arrays.asList(createSample(), createSample()));
-		List<Feature> list = repository.list(feature, expression, feature);
+		List<Experiment> list = repository.list(experiment, expression, experiment);
 		MatcherAssert.assertThat(list, Matchers.hasSize(2));
-		Mockito.verify(jpaQuery).select(feature);
-		Mockito.verify(jpaQuery).from(feature);
+		Mockito.verify(jpaQuery).select(experiment);
+		Mockito.verify(jpaQuery).from(experiment);
 		Mockito.verify(jpaQuery).where(expression);
 		Mockito.verify(jpaQuery).fetch();
 	}
 
 	@Test
 	public void all() {
-		Mockito.when(jpaQuery.select(feature)).thenReturn(jpaQuery);
-		Mockito.when(jpaQuery.from(feature)).thenReturn(jpaQuery);
+		Mockito.when(jpaQuery.select(experiment)).thenReturn(jpaQuery);
+		Mockito.when(jpaQuery.from(experiment)).thenReturn(jpaQuery);
 		Mockito.when(jpaQuery.fetch()).thenReturn(Arrays.asList(createSample(), createSample()));
-		List<Feature> list = repository.all(feature, feature);
+		List<Experiment> list = repository.all(experiment, experiment);
 		MatcherAssert.assertThat(list, Matchers.hasSize(2));
-		Mockito.verify(jpaQuery).select(feature);
-		Mockito.verify(jpaQuery).from(feature);
+		Mockito.verify(jpaQuery).select(experiment);
+		Mockito.verify(jpaQuery).from(experiment);
 		Mockito.verify(jpaQuery).fetch();
 	}
 
-	private Feature createSample() {
-		return Feature.builder().id(DUMMY_ID).build();
+	private Experiment createSample() {
+		return Experiment.builder().id(DUMMY_ID).build();
 	}
 }

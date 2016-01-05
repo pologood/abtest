@@ -14,45 +14,45 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import com.softexpert.business.FeatureEnablingService;
-import com.softexpert.business.FeatureLoadService;
-import com.softexpert.business.FeaturePersistenceService;
+import com.softexpert.business.ExperimentEnablingService;
+import com.softexpert.business.ExperimentLoadService;
+import com.softexpert.business.ExperimentPersistenceService;
 import com.softexpert.business.exception.AppException;
 import com.softexpert.business.exception.FeatureEnablingException;
-import com.softexpert.persistence.Feature;
+import com.softexpert.persistence.Experiment;
 
-@Path("features")
+@Path("experiments")
 @Consumes(APPLICATION_JSON)
 @Produces(APPLICATION_JSON)
-public class FeatureResource {
+public class ExperimentResource {
 
 	@Inject
-	private FeatureLoadService service;
+	private ExperimentLoadService service;
 	@Inject
-	private FeatureEnablingService featureEnablingService;
+	private ExperimentEnablingService experimentEnablingService;
 	@Inject
-	private FeaturePersistenceService featurePersistenceService;
+	private ExperimentPersistenceService experimentPersistenceService;
 
 	@GET
-	public List<Feature> list(@QueryParam("search") String search) {
+	public List<Experiment> list(@QueryParam("search") String search) {
 		return service.list(search);
 	}
 
 	@POST
-	public Feature save(Feature entity) throws AppException {
-		return featurePersistenceService.create(entity);
+	public Experiment save(Experiment entity) throws AppException {
+		return experimentPersistenceService.create(entity);
 	}
 
 	@GET
 	@Path("/{id}")
-	public Feature find(@PathParam("id") Long id)throws AppException {
+	public Experiment find(@PathParam("id") Long id)throws AppException {
 		return service.find(id);
 	}
 	
 	@PUT
 	@Path("/{id}/enabling")
 	public void enabling(@PathParam("id") Long id, Boolean enabling) throws FeatureEnablingException {
-		featureEnablingService.enabling(id, enabling);
+		experimentEnablingService.enabling(id, enabling);
 	}	
 
 }

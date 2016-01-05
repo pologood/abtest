@@ -4,13 +4,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import javax.inject.Inject;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
 
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -25,25 +19,25 @@ import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.softexpert.business.exception.AppException;
-import com.softexpert.persistence.ABTest;
-import com.softexpert.persistence.Feature;
-import com.softexpert.persistence.QABTest;
-import com.softexpert.persistence.QFeature;
-import com.softexpert.repository.ABTestRepository;
+import com.softexpert.persistence.Experiment;
+import com.softexpert.persistence.QExperiment;
+import com.softexpert.persistence.QVariation;
+import com.softexpert.persistence.Variation;
 import com.softexpert.repository.DefaultRepository;
-import com.softexpert.repository.FeatureRepository;
+import com.softexpert.repository.ExperimentRepository;
+import com.softexpert.repository.VariationRepository;
 
 public class FeatureLoadServiceTest {
 
 	private static final long ID = 1L;
 	@InjectMocks
-	private FeatureLoadService service;
+	private ExperimentLoadService service;
 	@Mock
-	private DefaultRepository<Feature> repository;
+	private DefaultRepository<Experiment> repository;
 	@Mock
-	private FeatureRepository featureRepository;
+	private ExperimentRepository experimentRepository;
 	@Mock
-	private ABTestRepository abTestRepository;
+	private VariationRepository variationRepository;
 	
 	@Before
 	public void init() {
@@ -52,9 +46,9 @@ public class FeatureLoadServiceTest {
 
 	@Test
 	public void listAll() {
-		Mockito.when(repository.all(QFeature.feature, createFeatureConstructiorExpression())).thenReturn(getList());
-		List<Feature> list = service.list("");
-		Mockito.verify(repository).all(QFeature.feature, createFeatureConstructiorExpression());
+		Mockito.when(repository.all(QExperiment.experiment, createFeatureConstructiorExpression())).thenReturn(getList());
+		List<Experiment> list = service.list("");
+		Mockito.verify(repository).all(QExperiment.experiment, createFeatureConstructiorExpression());
 		MatcherAssert.assertThat(list, Matchers.hasSize(1));
 		MatcherAssert.assertThat(list, Matchers.contains(create(ID, null)));
 	}
@@ -62,57 +56,57 @@ public class FeatureLoadServiceTest {
 	@Test
 	public void find() throws AppException {
 		long testId = 89L;
-		Mockito.when(featureRepository.findById(ID, createFeatureConstructiorExpression())).thenReturn(create(ID, null));
-		Mockito.when(abTestRepository.listFromFeature(ID, createABTestConstructor())).thenReturn(Arrays.asList(ABTest.builder().id(testId).build()));
-		Feature sample = service.find(ID);
-		Mockito.verify(abTestRepository).listFromFeature(ID, createABTestConstructor());
-		Mockito.verify(featureRepository).findById(ID, createFeatureConstructiorExpression());
+		Mockito.when(experimentRepository.findById(QExperiment.experiment.id.eq(ID), createFeatureConstructiorExpression())).thenReturn(create(ID, null));
+		Mockito.when(variationRepository.list(QVariation.variation.experiment.id.eq(ID), createABTestConstructor())).thenReturn(Arrays.asList(Variation.builder().id(testId).build()));
+		Experiment sample = service.find(ID);
+		Mockito.verify(variationRepository).list(QVariation.variation.experiment.id.eq(ID), createABTestConstructor());
+		Mockito.verify(experimentRepository).findById(QExperiment.experiment.id.eq(ID), createFeatureConstructiorExpression());
 		MatcherAssert.assertThat(sample, Matchers.equalTo(create(ID, null)));
-		MatcherAssert.assertThat(sample.tests, Matchers.hasSize(1));
-		MatcherAssert.assertThat(sample.tests.get(0).id, Matchers.equalTo(testId));
+		MatcherAssert.assertThat(sample.variations, Matchers.hasSize(1));
+		MatcherAssert.assertThat(sample.variations.get(0).id, Matchers.equalTo(testId));
 	}
 
 	@Test
 	public void getFilter() throws AppException {
 		String schearch = "Lala";
 		Predicate filter = getFilter(schearch);
-		MatcherAssert.assertThat(filter, Matchers.equalTo(QFeature.feature.name.containsIgnoreCase(schearch)));
+		MatcherAssert.assertThat(filter, Matchers.equalTo(QExperiment.experiment.name.containsIgnoreCase(schearch)));
 	}
 
 	@Test(expected = AppException.class)
 	public void findByIdWithError() throws AppException {
-		when(featureRepository.findById(ID,createFeatureConstructiorExpression())).thenThrow(new IllegalArgumentException("Error"));
+		when(experimentRepository.findById(QExperiment.experiment.id.eq(ID),createFeatureConstructiorExpression())).thenThrow(new IllegalArgumentException("Error"));
 		service.find(ID);
 	}
 
 	@Test
 	public void listWithError() {
 		String schearch = "search";
-		Mockito.when(repository.list(QFeature.feature, getFilter(schearch), createFeatureConstructiorExpression())).thenReturn(getList());
-		List<Feature> list = service.list(schearch);
-		Mockito.verify(repository).list(QFeature.feature, getFilter(schearch), createFeatureConstructiorExpression());
+		Mockito.when(repository.list(QExperiment.experiment, getFilter(schearch), createFeatureConstructiorExpression())).thenReturn(getList());
+		List<Experiment> list = service.list(schearch);
+		Mockito.verify(repository).list(QExperiment.experiment, getFilter(schearch), createFeatureConstructiorExpression());
 		MatcherAssert.assertThat(list, Matchers.hasSize(1));
 		MatcherAssert.assertThat(list, Matchers.contains(create(ID, null)));
 	}
 
-	private ConstructorExpression<ABTest> createABTestConstructor() {
-		return Projections.constructor(ABTest.class, QABTest.aBTest.id,QABTest.aBTest.name);
+	private ConstructorExpression<Variation> createABTestConstructor() {
+		return Projections.constructor(Variation.class, QVariation.variation.id,QVariation.variation.name);
 	}
 	
-	private ConstructorExpression<Feature> createFeatureConstructiorExpression() {
-		return Projections.constructor(Feature.class,QFeature.feature.id, QFeature.feature.name, QFeature.feature.enabled, QFeature.feature.percentage);
+	private ConstructorExpression<Experiment> createFeatureConstructiorExpression() {
+		return Projections.constructor(Experiment.class,QExperiment.experiment.id, QExperiment.experiment.name, QExperiment.experiment.enabled, QExperiment.experiment.percentage);
 	}
 
 	private Predicate getFilter(String schearch) {
-		return QFeature.feature.name.containsIgnoreCase(schearch);
+		return QExperiment.experiment.name.containsIgnoreCase(schearch);
 	}
 
-	private List<Feature> getList() {
+	private List<Experiment> getList() {
 		return Collections.singletonList(create(ID, null));
 	}
 
-	private Feature create(Long id, String name) {
-		return Feature.builder()
+	private Experiment create(Long id, String name) {
+		return Experiment.builder()
 				.id(id)
 				.name(name)
 				.build();

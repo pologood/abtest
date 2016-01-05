@@ -9,16 +9,16 @@ import org.mockito.MockitoAnnotations;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.softexpert.business.exception.FeatureEnablingException;
-import com.softexpert.persistence.QFeature;
-import com.softexpert.repository.FeatureRepository;
+import com.softexpert.persistence.QExperiment;
+import com.softexpert.repository.ExperimentRepository;
 
 public class FeatureEnablingServiceTest {
 
 	private static final long ID = 1L;
 	@InjectMocks
-	private FeatureEnablingService service;
+	private ExperimentEnablingService service;
 	@Mock
-	private FeatureRepository repository;
+	private ExperimentRepository repository;
 
 	@Before
 	public void init() {
@@ -53,7 +53,7 @@ public class FeatureEnablingServiceTest {
 
 
 	private BooleanExpression createPredicate(long id, boolean state) {
-		return QFeature.feature.id.eq(id).and(QFeature.feature.enabled.eq(state));
+		return QExperiment.experiment.id.eq(id).and(QExperiment.experiment.enabled.eq(state));
 	}
 
 }

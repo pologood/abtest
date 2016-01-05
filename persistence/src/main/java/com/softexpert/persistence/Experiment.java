@@ -23,15 +23,15 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @EqualsAndHashCode(callSuper = false, of = "id")
-@SequenceGenerator(name = "seq_feature", initialValue = 1)
+@SequenceGenerator(name = "seq_experiment", initialValue = 1)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Feature {
+public class Experiment {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_feature")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_experiment")
 	public Long id;
 
 	@Size(min = 1)
@@ -50,10 +50,10 @@ public class Feature {
 	public BigDecimal percentage;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "FEATURE_ID")
-	public List<ABTest> tests;
+	@JoinColumn(name = "EXPERIMENT_ID")
+	public List<Variation> variations;
 
-	public Feature(Long id, String name, Boolean enabled, BigDecimal percentage) {
+	public Experiment(Long id, String name, Boolean enabled, BigDecimal percentage) {
 		this.id = id;
 		this.name = name;
 		this.enabled = enabled;

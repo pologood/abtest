@@ -17,24 +17,24 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
-@SequenceGenerator(name="seq_test", initialValue=1)
+@SequenceGenerator(name="seq_variation", initialValue=1)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ABTest {
+public class Variation {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq_test")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq_variation")
 	public Long id;
 	
 	@Size(min = 1)
 	public String name;
 	
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	public Feature feature;
+	public Experiment experiment;
 	
-	public ABTest(Long id, String name){
+	public Variation(Long id, String name){
 		this.id = id;
 		this.name = name;
 	}
