@@ -1,18 +1,18 @@
 package com.softexpert.business;
 
-import static com.softexpert.persistence.QFeature.feature;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 import com.softexpert.business.exception.FeatureEnablingException;
-import com.softexpert.repository.FeatureRepository;
+import com.softexpert.persistence.QExperiment;
+import com.softexpert.repository.ExperimentRepository;
 
 @Stateless
-public class FeatureEnablingService {
+public class ExperimentEnablingService {
 
 	@Inject
-	private FeatureRepository repository;
+	private ExperimentRepository repository;
 
 	public void enabling(Long id, Boolean state) throws FeatureEnablingException {
 		long linesChanged = executeUpdate(id, state);
@@ -21,7 +21,7 @@ public class FeatureEnablingService {
 	}
 
 	private long executeUpdate(Long id, Boolean state) {
-		return repository.toogleState(state, feature.id.eq(id).and(feature.enabled.eq(!state)));
+		return repository.toogleState(state, QExperiment.experiment.id.eq(id).and(QExperiment.experiment.enabled.eq(!state)));
 	}
 	
 	private boolean hasExecutedUpdate(long linesChanged) {
