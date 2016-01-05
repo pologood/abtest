@@ -16,10 +16,10 @@
 		<hamcrest.version>1.3</hamcrest.version>
 		<guava.version>18.0</guava.version>
 		<lombok.version>1.16.6</lombok.version>
+		<jackson.version>2.6.4</jackson.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-
 		<test.mutation>false</test.mutation>
 		<dependency.skip>false</dependency.skip>
 		<test.totalMutation>85</test.totalMutation>
@@ -106,6 +106,12 @@
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
 				<version>${lombok.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
+				<version>${jackson.version}</version>
 				<scope>provided</scope>
 			</dependency>
 		</dependencies>

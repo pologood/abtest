@@ -40,13 +40,6 @@ public class DefaultRepositoryTest {
 	}
 
 	@Test
-	public void findById() {
-		Mockito.when(entityManager.find(Feature.class, DUMMY_ID)).thenReturn(createSample());
-		Feature sample= repository.findById(1L, Feature.class);
-		MatcherAssert.assertThat(sample.id, Matchers.equalTo(DUMMY_ID));
-	}
-
-	@Test
 	public void save() {
 		Feature entity = createSample();
 		entity = repository.save(entity);
@@ -60,13 +53,6 @@ public class DefaultRepositoryTest {
 		repository.edit(entity);
 		Mockito.verify(entityManager, Mockito.never()).persist(entity);
 		Mockito.verify(entityManager).merge(entity);
-	}
-
-	@Test
-	public void delete() {
-		Feature entity = createSample();
-		repository.delete(entity);
-		Mockito.verify(entityManager).remove(entity);
 	}
 
 	@Test
