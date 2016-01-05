@@ -56,13 +56,6 @@ public class DefaultRepositoryTest {
 	}
 
 	@Test
-	public void delete() {
-		Feature entity = createSample();
-		repository.delete(entity);
-		Mockito.verify(entityManager).remove(entity);
-	}
-
-	@Test
 	public void list() {
 		BooleanExpression expression = feature.id.eq(DUMMY_ID);
 		Mockito.when(jpaQuery.select(feature)).thenReturn(jpaQuery);

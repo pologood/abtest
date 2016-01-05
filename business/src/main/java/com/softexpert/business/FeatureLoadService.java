@@ -1,5 +1,7 @@
 package com.softexpert.business;
 
+import static com.softexpert.business.ErrorMessages.SEARCH_ERROR;
+
 import java.util.List;
 import java.util.Set;
 
@@ -42,7 +44,7 @@ public class FeatureLoadService {
 			feature.tests = abTestRepository.listFromFeature(feature.id, createABTestExpressionConstructor());
 			return feature;
 		} catch (Exception e) {
-			throw new AppException(FeatureErroMesage.SEARCH_ERROR);
+			throw new AppException(SEARCH_ERROR);
 		}
 	}
 

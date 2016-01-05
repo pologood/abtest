@@ -74,7 +74,7 @@ public class FeatureResourceIT {
 
 	@Test
 	public void list() throws Exception {
-		String name = "new name";
+		String name = "new name "+System.currentTimeMillis();
 		post(name, true, null);
 		List<Feature> list = list(name);
 		MatcherAssert.assertThat(list, Matchers.hasSize(1));

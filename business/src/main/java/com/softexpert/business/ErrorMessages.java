@@ -1,6 +1,6 @@
 package com.softexpert.business;
 
-public interface FeatureErroMesage {
+public interface ErrorMessages {
 
 	static final String DELETE_ERROR = "Ops... registro não pode ser removido ou está send utilizado.";
 	static final String COULD_NOT_EDIT_ERROR = "Ops... registro não pode ser editado, verifique se todos os dados então preenchidos corretamente.";
