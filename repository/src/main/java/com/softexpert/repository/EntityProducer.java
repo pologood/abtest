@@ -9,8 +9,9 @@ import javax.persistence.PersistenceContext;
 
 @Stateless
 public class EntityProducer implements Serializable {
-	private static final long serialVersionUID = 1L;
 
+	private static final long serialVersionUID = -5165368545535190902L;
+	
 	@PersistenceContext(name = "ExampleDS")
 	private EntityManager entityManager;
 

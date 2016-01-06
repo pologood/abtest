@@ -11,9 +11,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.xml.ws.BindingType;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Entity
 @SequenceGenerator(name="seq_user", initialValue=1)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class User {
 
 	@Id
@@ -24,7 +32,11 @@ public class User {
 
 	public String name;
 	
-	public String domain;
+	public String login;
+	
+	public String group;
+	
+	public String host;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "USER_ID")

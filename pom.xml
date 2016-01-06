@@ -10,7 +10,7 @@
 
 	<properties>
 		<version.javaee>7.0</version.javaee>
-		<querydsl.version>4.0.4</querydsl.version>
+		<querydsl.version>4.0.7</querydsl.version>
 		<junit.version>4.12</junit.version>
 		<mockito.version>2.0.2-beta</mockito.version>
 		<hamcrest.version>1.3</hamcrest.version>
@@ -24,7 +24,7 @@
 		<dependency.skip>false</dependency.skip>
 		<test.totalMutation>85</test.totalMutation>
 		<lineRate>80</lineRate>
-		<branchRate>90</branchRate>
+		<branchRate>80</branchRate>
 		<totalLineRate>95</totalLineRate>
 		<totalBranchRate>95</totalBranchRate>
 	</properties>
