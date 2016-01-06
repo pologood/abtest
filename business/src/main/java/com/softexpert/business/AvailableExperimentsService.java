@@ -21,16 +21,16 @@ public class AvailableExperimentsService {
 	@Inject
 	private AvailableExperimentsRepository repository;
 
-	public Collection<Experiment> getAvailableExperiments() {
+	public List<Experiment> getAvailableExperiments() {
 		List<Variation> variations = repository.list(QExperiment.experiment.enabled.isTrue());
-		Set<Experiment> experiments = new HashSet<>();
+		List<Experiment> experiments = new ArrayList<>();
 		variations.stream().forEach(variation -> {
 			addVariant(experiments, variation);
 		});
 		return experiments;
 	}
 
-	private void addVariant(Set<Experiment> experiments, Variation variation) {
+	private void addVariant(List<Experiment> experiments, Variation variation) {
 		Experiment experiment = getExperiment(experiments, variation);
 		if (experiment == null)
 			experiments.add(getExperiment(variation));
@@ -38,7 +38,7 @@ public class AvailableExperimentsService {
 			experiment.variations.add(variation);
 	}
 
-	private Experiment getExperiment(Set<Experiment> experiments, Variation variation) {
+	private Experiment getExperiment(List<Experiment> experiments, Variation variation) {
 		if (!experiments.isEmpty()){
 			Optional<Experiment> experiment = experiments.stream().filter(e -> e.id.equals(variation.experiment.id)).findFirst();
 			if(experiment.isPresent())

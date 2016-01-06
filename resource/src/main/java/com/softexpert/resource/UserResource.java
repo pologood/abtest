@@ -10,7 +10,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-import com.softexpert.business.RaffleVariationService;
+import com.softexpert.business.RandomVariationService;
 import com.softexpert.dto.ExperimentDTO;
 import com.softexpert.dto.UserDTO;
 
@@ -20,11 +20,11 @@ import com.softexpert.dto.UserDTO;
 public class UserResource {
 
 	@Inject
-	private RaffleVariationService service;
+	private RandomVariationService service;
 
 	@POST
 	public List<ExperimentDTO> raffle(UserDTO user) {
-		return service.raffle(user);
+		return service.random(user);
 	}
 
 }

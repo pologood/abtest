@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
-import javax.xml.ws.BindingType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
