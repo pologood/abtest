@@ -14,10 +14,10 @@ import com.softexpert.business.RandomVariationService;
 import com.softexpert.dto.ExperimentDTO;
 import com.softexpert.dto.UserDTO;
 
-@Path("public/users")
+@Path("public/users-experiments")
 @Consumes(APPLICATION_JSON)
 @Produces(APPLICATION_JSON)
-public class UserResource {
+public class UserExperiemntResource {
 
 	@Inject
 	private RandomVariationService service;
