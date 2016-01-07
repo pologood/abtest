@@ -111,7 +111,13 @@ public class ExperimentResourceIT {
 	}
 
 	private Experiment post(String name, boolean enabled, List<Variation> tests) {
-		Experiment entity = Experiment.builder().name(name).enabled(enabled).percentage(BigDecimal.TEN).variations(tests).build();
+		Experiment entity = Experiment.builder()
+				.name(name)
+				.enabled(enabled)
+				.percentage(BigDecimal.TEN)
+				.variations(tests)
+				.users(Arrays.asList("A","B"))
+				.build();
 		return target.path("/v1/experiments")
 				.request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(entity, MediaType.APPLICATION_JSON_TYPE), Experiment.class);

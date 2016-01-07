@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -39,12 +42,21 @@ public class Experiment {
 
 	public String description;
 
-	public String domainList;
+	@ElementCollection
+	@CollectionTable(name = "domains", joinColumns = @JoinColumn(name = "domain_id") )
+	@Column(name = "domains")
+	public List<String> domains;
 
-	public String groupList;
+	@ElementCollection
+	@CollectionTable(name = "groups", joinColumns = @JoinColumn(name = "group_id") )
+	@Column(name = "groups")
+	public List<String> groups;
 
-	public String userList;
-	
+	@ElementCollection
+	@CollectionTable(name = "username", joinColumns = @JoinColumn(name = "user_id") )
+	@Column(name = "user")
+	public List<String> users;
+
 	public Boolean enabled;
 
 	public BigDecimal percentage;

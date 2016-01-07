@@ -22,9 +22,9 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<test.mutation>false</test.mutation>
 		<dependency.skip>false</dependency.skip>
-		<test.totalMutation>85</test.totalMutation>
+		<test.totalMutation>97</test.totalMutation>
 		<lineRate>80</lineRate>
-		<branchRate>80</branchRate>
+		<branchRate>85</branchRate>
 		<totalLineRate>95</totalLineRate>
 		<totalBranchRate>95</totalBranchRate>
 	</properties>
