@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -17,9 +19,11 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
+import com.softexpert.business.exception.AppException;
 import com.softexpert.dto.ExperimentDTO;
 import com.softexpert.dto.UserDTO;
 import com.softexpert.persistence.Experiment;
+import com.softexpert.persistence.User;
 
 public class RandomVariationServiceTest {
 
@@ -29,6 +33,8 @@ public class RandomVariationServiceTest {
 	private AvailableExperimentsService availableExperimentsService;
 	@Spy
 	private RandomUserExperimentService randomVariationRuleService = new RandomUserExperimentService();
+	@Mock
+	private PersistenceService<User> uesrService;
 	
 	@Before
 	public void init() {
@@ -36,7 +42,7 @@ public class RandomVariationServiceTest {
 	}
 
 	@Test
-	public void randomWithAllUsersWithVariation() {
+	public void randomWithAllUsersWithVariation() throws AppException {
 		mock(createSimpleExperiments());
 		List<ExperimentDTO> experiments = service.random(createUser());
 		MatcherAssert.assertThat(experiments, Matchers.hasSize(1));
@@ -45,7 +51,7 @@ public class RandomVariationServiceTest {
 	}
 	
 	@Test
-	public void randomWithAllUsersSimpleExperiment() {
+	public void randomWithAllUsersSimpleExperiment() throws AppException {
 		mock(createSimpleExperiments("NEW"));
 		List<ExperimentDTO> experiments = service.random(createUser());
 		MatcherAssert.assertThat(experiments.get(0).name, Matchers.equalTo("DEFAULT_FRAME"));
@@ -53,7 +59,7 @@ public class RandomVariationServiceTest {
 	}
 
 	@Test
-	public void randomWithExperiments() {
+	public void randomWithExperiments() throws AppException {
 		mock(Arrays.asList(createExperiment("DEFAULT_FRAME", new BigDecimal(100D), "NEW"),
 				createExperiment("DASHBOARD", new BigDecimal(50D), "NEW", "OLD"),
 				createExperiment("CHATS", new BigDecimal(0D)),

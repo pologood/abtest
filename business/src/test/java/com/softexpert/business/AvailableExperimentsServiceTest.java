@@ -15,8 +15,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import com.querydsl.core.types.ConstructorExpression;
+import com.querydsl.core.types.Projections;
 import com.softexpert.persistence.Experiment;
 import com.softexpert.persistence.QExperiment;
+import com.softexpert.persistence.QVariation;
 import com.softexpert.persistence.Variation;
 import com.softexpert.repository.AvailableExperimentsRepository;
 
@@ -59,7 +62,7 @@ public class AvailableExperimentsServiceTest {
 	@Test
 	public void getManyResults() {
 		List<Variation> variations = createVariations();
-		Mockito.when(repository.list(QExperiment.experiment.enabled.isTrue())).thenReturn(variations);
+		Mockito.when(repository.list(QExperiment.experiment.enabled.isTrue(), buildConstructor())).thenReturn(variations);
 		List<Experiment> availableExperiments = service.getAvailableExperiments();
 		MatcherAssert.assertThat(availableExperiments, Matchers.notNullValue());
 		MatcherAssert.assertThat(availableExperiments, Matchers.hasSize(2));
@@ -69,7 +72,7 @@ public class AvailableExperimentsServiceTest {
 
 	@Test
 	public void getWithEmptyList() {
-		Mockito.when(repository.list(QExperiment.experiment.enabled.isTrue())).thenReturn(Collections.emptyList());
+		Mockito.when(repository.list(QExperiment.experiment.enabled.isTrue(), buildConstructor())).thenReturn(Collections.emptyList());
 		List<Experiment> availableExperiments = service.getAvailableExperiments();
 		MatcherAssert.assertThat(availableExperiments, Matchers.notNullValue());
 		MatcherAssert.assertThat(availableExperiments, Matchers.hasSize(0));
@@ -85,11 +88,15 @@ public class AvailableExperimentsServiceTest {
 	
 	private void mockSimpleExperiment() {
 		List<Variation> variations = createDefaultFrameVariation();
-		Mockito.when(repository.list(QExperiment.experiment.enabled.isTrue())).thenReturn(variations);
+		Mockito.when(repository.list(QExperiment.experiment.enabled.isTrue(), buildConstructor())).thenReturn(variations);
 	}
 
 	private List<Variation> createDefaultFrameVariation() {
 		Experiment experiment = Experiment.builder().id(EXPERIMENT_ID).name(EXPERIMENT_NAME).build();
 		return Arrays.asList(Variation.builder().id(VARIATION_ID).name(VARIATION_NAME).experiment(experiment).build());
+	}
+	
+	private ConstructorExpression<Variation> buildConstructor() {
+		return Projections.constructor(Variation.class, QVariation.variation.id, QVariation.variation.name, QVariation.variation.experiment);
 	}
 }

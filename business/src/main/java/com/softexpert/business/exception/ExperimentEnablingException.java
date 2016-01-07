@@ -1,10 +1,10 @@
 package com.softexpert.business.exception;
 
-public class FeatureEnablingException extends AppException {
+public class ExperimentEnablingException extends AppException {
 
 	private static final long serialVersionUID = 7193936711006293304L;
 
-	public FeatureEnablingException(String message) {
+	public ExperimentEnablingException(String message) {
 		super(message);
 	}
 }

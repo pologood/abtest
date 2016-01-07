@@ -80,7 +80,7 @@ public class RandomUserExperimentServiceTest {
 	@Test
 	public void randomWithDomain() {
 		Experiment dashboard = createExperiment("DASHBOARD", new BigDecimal(100D), "OLD");
-		dashboard.domains = Arrays.asList("www.softexpert.com");
+		dashboard.domains = "www.demobr.com;www.softexpert.com";
 		UserExperiment experiment = service.random(createUser(), dashboard);
 		MatcherAssert.assertThat(experiment.variation.name, Matchers.equalTo("OLD"));
 	}
@@ -88,7 +88,7 @@ public class RandomUserExperimentServiceTest {
 	@Test
 	public void randomWithDomainNotAlow() {
 		Experiment dashboard = createExperiment("DASHBOARD", new BigDecimal(100D), "OLD");
-		dashboard.domains = Arrays.asList("www.demobr.com");
+		dashboard.domains = "www.demobr.com";
 		UserExperiment experiment = service.random(createUser(), dashboard);
 		MatcherAssert.assertThat(experiment.variation.name, Matchers.nullValue());
 	}
@@ -96,8 +96,8 @@ public class RandomUserExperimentServiceTest {
 	@Test
 	public void randomWithGroupAndDomain() {
 		Experiment dashboard = createExperiment("DASHBOARD", new BigDecimal(100D), "OLD");
-		dashboard.groups = Arrays.asList("Tec");
-		dashboard.domains = Arrays.asList("www.softexpert.com");
+		dashboard.groups = "DES;Tec";
+		dashboard.domains = "www.demobr.com;www.softexpert.com";
 		UserExperiment experiment = service.random(createUser(), dashboard);
 		MatcherAssert.assertThat(experiment.variation.name, Matchers.equalTo("OLD"));
 	}
@@ -105,7 +105,7 @@ public class RandomUserExperimentServiceTest {
 	@Test
 	public void randomWithGroup() {
 		Experiment dashboard = createExperiment("DASHBOARD", new BigDecimal(100D), "OLD");
-		dashboard.groups = Arrays.asList("Tec");
+		dashboard.groups = "Tec";
 		UserExperiment experiment = service.random(createUser(), dashboard);
 		MatcherAssert.assertThat(experiment.variation.name, Matchers.nullValue());
 	}
@@ -113,8 +113,8 @@ public class RandomUserExperimentServiceTest {
 	@Test
 	public void randomWithGropsNotAlow() {
 		Experiment dashboard = createExperiment("DASHBOARD", new BigDecimal(100D), "OLD");
-		dashboard.groups = Arrays.asList("DES");
-		dashboard.domains = Arrays.asList("www.softexpert.com");
+		dashboard.groups = "DES";
+		dashboard.domains ="www.softexpert.com";
 		UserExperiment experiment = service.random(createUser(), dashboard);
 		MatcherAssert.assertThat(experiment.variation.name, Matchers.nullValue());
 	}
@@ -122,8 +122,8 @@ public class RandomUserExperimentServiceTest {
 	@Test
 	public void randomWithGroupAlowAndDomainNotAlow() {
 		Experiment dashboard = createExperiment("DASHBOARD", new BigDecimal(100D), "OLD");
-		dashboard.groups = Arrays.asList("Tec");
-		dashboard.domains = Arrays.asList("www.demobr.com");
+		dashboard.groups = "Tec";
+		dashboard.domains = "www.demobr.com";
 		UserExperiment experiment = service.random(createUser(), dashboard);
 		MatcherAssert.assertThat(experiment.variation.name, Matchers.nullValue());
 	}
@@ -131,8 +131,8 @@ public class RandomUserExperimentServiceTest {
 	@Test
 	public void randomWithAlowUserAndDomain() {
 		Experiment dashboard = createExperiment("DASHBOARD", new BigDecimal(100D), "OLD");
-		dashboard.users = Arrays.asList("joao.silva");
-		dashboard.domains = Arrays.asList("www.softexpert.com");
+		dashboard.users = "pedrojoaqeuim@se.com;joao.silva";
+		dashboard.domains = "www.softexpert.com";
 		UserExperiment experiment = service.random(createUser(), dashboard);
 		MatcherAssert.assertThat(experiment.variation.name, Matchers.equalTo("OLD"));
 	}
@@ -140,7 +140,7 @@ public class RandomUserExperimentServiceTest {
 	@Test
 	public void randomWithUserAlowUser() {
 		Experiment dashboard = createExperiment("DASHBOARD", new BigDecimal(100D), "OLD");
-		dashboard.users = Arrays.asList("joao.silva");
+		dashboard.users = "joao.silva";
 		UserExperiment experiment = service.random(createUser(), dashboard);
 		MatcherAssert.assertThat(experiment.variation.name, Matchers.nullValue());
 	}
@@ -148,7 +148,7 @@ public class RandomUserExperimentServiceTest {
 	@Test
 	public void randomWithUserWithoutDomain() {
 		Experiment dashboard = createExperiment("DASHBOARD", new BigDecimal(100D), "OLD");
-		dashboard.users = Arrays.asList("maria.souza");
+		dashboard.users = "maria.souza";
 		UserExperiment experiment = service.random(createUser(), dashboard);
 		MatcherAssert.assertThat(experiment.variation.name, Matchers.nullValue());
 	}
@@ -156,8 +156,8 @@ public class RandomUserExperimentServiceTest {
 	@Test
 	public void randomWithUserNotAlow() {
 		Experiment dashboard = createExperiment("DASHBOARD", new BigDecimal(100D), "OLD");
-		dashboard.users = Arrays.asList("maria.souza");
-		dashboard.domains = Arrays.asList("www.softexpert.com");
+		dashboard.users = "maria.souza";
+		dashboard.domains ="www.softexpert.com";
 		UserExperiment experiment = service.random(createUser(), dashboard);
 		MatcherAssert.assertThat(experiment.variation.name, Matchers.nullValue());
 	}
@@ -165,8 +165,8 @@ public class RandomUserExperimentServiceTest {
 	@Test
 	public void randomWithUserAlowAndDomainNotAlow() {
 		Experiment dashboard = createExperiment("DASHBOARD", new BigDecimal(100D), "OLD");
-		dashboard.users = Arrays.asList("joao.silva");
-		dashboard.domains = Arrays.asList("www.demobr.com");
+		dashboard.users = "joao.silva";
+		dashboard.domains = "www.demobr.com;www.tec.com";
 		UserExperiment experiment = service.random(createUser(), dashboard);
 		MatcherAssert.assertThat(experiment.variation.name, Matchers.nullValue());
 	}
@@ -174,8 +174,8 @@ public class RandomUserExperimentServiceTest {
 	@Test
 	public void randomWithEmptyLists() {
 		Experiment dashboard = createExperiment("DASHBOARD", new BigDecimal(100D), "OLD");
-		dashboard.users = Collections.emptyList();
-		dashboard.domains = Collections.emptyList();
+		dashboard.users = "";
+		dashboard.domains = "";
 		UserExperiment experiment = service.random(createUser(), dashboard);
 		MatcherAssert.assertThat(experiment.variation.name, Matchers.equalTo("OLD"));
 	}

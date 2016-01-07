@@ -16,9 +16,9 @@ import javax.ws.rs.QueryParam;
 
 import com.softexpert.business.ExperimentEnablingService;
 import com.softexpert.business.ExperimentLoadService;
-import com.softexpert.business.ExperimentPersistenceService;
+import com.softexpert.business.PersistenceService;
 import com.softexpert.business.exception.AppException;
-import com.softexpert.business.exception.FeatureEnablingException;
+import com.softexpert.business.exception.ExperimentEnablingException;
 import com.softexpert.persistence.Experiment;
 
 @Path("experiments")
@@ -31,7 +31,7 @@ public class ExperimentResource {
 	@Inject
 	private ExperimentEnablingService experimentEnablingService;
 	@Inject
-	private ExperimentPersistenceService experimentPersistenceService;
+	private PersistenceService<Experiment> experimentPersistenceService;
 
 	@GET
 	public List<Experiment> list(@QueryParam("search") String search) {
@@ -51,7 +51,7 @@ public class ExperimentResource {
 	
 	@PUT
 	@Path("/{id}/enabling")
-	public void enabling(@PathParam("id") Long id, Boolean enabling) throws FeatureEnablingException {
+	public void enabling(@PathParam("id") Long id, Boolean enabling) throws ExperimentEnablingException {
 		experimentEnablingService.enabling(id, enabling);
 	}	
 

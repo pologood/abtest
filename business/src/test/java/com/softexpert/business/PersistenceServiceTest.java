@@ -21,11 +21,11 @@ import com.softexpert.persistence.QExperiment;
 import com.softexpert.repository.DefaultRepository;
 import com.softexpert.repository.ExperimentRepository;
 
-public class FeaturePersistenceServiceTest {
+public class PersistenceServiceTest {
 
 	private static final long ID = 1L;
 	@InjectMocks
-	private ExperimentPersistenceService service;
+	private PersistenceService<Experiment> service;
 	@Mock
 	private DefaultRepository<Experiment> repository;
 	@Mock
@@ -89,19 +89,6 @@ public class FeaturePersistenceServiceTest {
 		Mockito.verify(validator).validate(sample);
 	}
 	
-	@Test
-	public void delete() throws AppException {
-		service.delete(ID);
-
-		Mockito.verify(repository).delete(QExperiment.experiment, QExperiment.experiment.id.eq(ID));
-	}
-
-	@Test(expected = AppException.class)
-	public void deleteWithError() throws AppException {
-		Mockito.doThrow(new IllegalArgumentException("Error")).when(repository).delete(QExperiment.experiment, QExperiment.experiment.id.eq(ID));
-		service.delete(ID);
-	}
-
 
 	private Experiment create(Long id, String name) {
 		return Experiment.builder()

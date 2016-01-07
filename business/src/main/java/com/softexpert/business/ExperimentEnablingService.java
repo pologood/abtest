@@ -4,7 +4,7 @@ package com.softexpert.business;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
-import com.softexpert.business.exception.FeatureEnablingException;
+import com.softexpert.business.exception.ExperimentEnablingException;
 import com.softexpert.persistence.QExperiment;
 import com.softexpert.repository.ExperimentRepository;
 
@@ -14,10 +14,10 @@ public class ExperimentEnablingService {
 	@Inject
 	private ExperimentRepository repository;
 
-	public void enabling(Long id, Boolean state) throws FeatureEnablingException {
+	public void enabling(Long id, Boolean state) throws ExperimentEnablingException {
 		long linesChanged = executeUpdate(id, state);
 		if(!hasExecutedUpdate(linesChanged))
-			throw new FeatureEnablingException("Teste já está desabilito/habilitado");
+			throw new ExperimentEnablingException("Teste já está desabilito/habilitado");
 	}
 
 	private long executeUpdate(Long id, Boolean state) {

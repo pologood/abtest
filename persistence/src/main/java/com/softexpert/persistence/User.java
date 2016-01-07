@@ -39,6 +39,6 @@ public class User {
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "USER_ID")
-	public List<UserExperiment> tests;
+	public List<UserExperiment> experiments;
 	
 }

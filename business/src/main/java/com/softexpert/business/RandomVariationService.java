@@ -7,11 +7,13 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import com.softexpert.business.exception.AppException;
 import com.softexpert.dto.ExperimentDTO;
 import com.softexpert.dto.UserDTO;
 import com.softexpert.persistence.Experiment;
 import com.softexpert.persistence.User;
 import com.softexpert.persistence.UserExperiment;
+import com.softexpert.repository.UserExperimentRepository;
 
 @Stateless
 public class RandomVariationService {
@@ -20,12 +22,22 @@ public class RandomVariationService {
 	private AvailableExperimentsService availableExperimentsService;
 	@Inject
 	private RandomUserExperimentService randomVariationRuleService;
-	
-	public List<ExperimentDTO> random(UserDTO userDTO) {
-		User user = getUser(userDTO);
-		Collection<Experiment> experiment = availableExperimentsService.getAvailableExperiments();
-		List<UserExperiment> userExperiments = random(user, experiment);
-		return toDto(userExperiments);
+	@Inject
+	private PersistenceService<User> service;
+	@Inject
+	private UserExperimentService userExperimentService;
+
+	public List<ExperimentDTO> random(UserDTO userDTO) throws AppException {
+		User user = userExperimentService.getUser(userDTO);
+		if (user.id == null)
+			randomExperiments(user);
+		return toDto(user.experiments);
+	}
+
+	private void randomExperiments(User user) throws AppException {
+		Collection<Experiment> experiments = availableExperimentsService.getAvailableExperiments();
+		user.experiments = random(user, experiments);
+		service.create(user);
 	}
 
 	private List<ExperimentDTO> toDto(List<UserExperiment> userExperiments) {
@@ -35,28 +47,19 @@ public class RandomVariationService {
 	}
 
 	private ExperimentDTO toDto(UserExperiment userExperiment) {
-		return ExperimentDTO.builder()
-				.name(userExperiment.experiment.name)
-				.variationName(userExperiment.variation.name)
+		return ExperimentDTO.builder().name(userExperiment.experiment.name).variationName(userExperiment.variation.name)
 				.build();
 	}
 
 	private List<UserExperiment> random(User user, Collection<Experiment> experiments) {
 		List<UserExperiment> randomExperiments = new ArrayList<UserExperiment>();
-		experiments.stream().forEach(experiment -> 
-				randomExperiments.add(randomVariationRuleService.random(user, experiment))
-		);
+		experiments.stream()
+				.forEach(experiment -> randomExperiments.add(randomVariationRuleService.random(user, experiment)));
 		return randomExperiments;
 	}
 
 	private User getUser(UserDTO userDTO) {
-		return User.builder()
-				.id(1L)
-				.code(userDTO.code)
-				.group(userDTO.group)
-				.host(userDTO.host)
-				.login(userDTO.login)
-				.name(userDTO.name)
-				.build();
+		return User.builder().code(userDTO.code).group(userDTO.group).host(userDTO.host).login(userDTO.login)
+				.name(userDTO.name).build();
 	}
 }

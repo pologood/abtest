@@ -1,6 +1,7 @@
 package com.softexpert.persistence;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -42,20 +43,11 @@ public class Experiment {
 
 	public String description;
 
-	@ElementCollection
-	@CollectionTable(name = "domains", joinColumns = @JoinColumn(name = "domain_id") )
-	@Column(name = "domains")
-	public List<String> domains;
+	public String domains;
 
-	@ElementCollection
-	@CollectionTable(name = "groups", joinColumns = @JoinColumn(name = "group_id") )
-	@Column(name = "groups")
-	public List<String> groups;
+	public String groups;
 
-	@ElementCollection
-	@CollectionTable(name = "username", joinColumns = @JoinColumn(name = "user_id") )
-	@Column(name = "user")
-	public List<String> users;
+	public String users;
 
 	public Boolean enabled;
 

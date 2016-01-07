@@ -26,9 +26,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.softexpert.persistence.Variation;
+import com.softexpert.dto.ExperimentDTO;
+import com.softexpert.dto.UserDTO;
 import com.softexpert.persistence.Experiment;
 
-@RunWith(Arquillian.class)
+//@RunWith(Arquillian.class)
 public class ExperimentResourceIT {
 
 	@ArquillianResource
@@ -46,6 +48,7 @@ public class ExperimentResourceIT {
 
 	@Before
 	public void init() throws Exception {
+		base = new URI("http://localhost:8080/api/");
 		Client client = ClientBuilder.newClient();
 		target = client.target(base);
 	}
@@ -110,19 +113,48 @@ public class ExperimentResourceIT {
 		MatcherAssert.assertThat(httpStatus, Matchers.equalTo(404));
 	}
 
+	@Test
+	public void randomTest() throws Exception {
+		Experiment experiment = Experiment.builder()
+			.name("DEFAULT_FRAME")
+			.enabled(true)
+			.percentage(new BigDecimal(100D))
+			.variations(Arrays.asList(Variation.builder().name("NEW").build()))
+			.domains("www.demobr.com;www.softexpert.com")
+			.groups("TEC;DES")
+			.build();
+		post(experiment);
+		List<ExperimentDTO> experiments = random(UserDTO.builder()
+				.name("Alisson Medeiros")
+				.login("alisson.muller")
+				.host("www.softexpert.com")
+				.group("TEC")
+				.build());
+		System.out.println(experiments);
+	}
+	
 	private Experiment post(String name, boolean enabled, List<Variation> tests) {
-		Experiment entity = Experiment.builder()
+		return post(Experiment.builder()
 				.name(name)
 				.enabled(enabled)
 				.percentage(BigDecimal.TEN)
 				.variations(tests)
-				.users(Arrays.asList("A","B"))
-				.build();
+				.users("A,B")
+				.build());
+	}
+
+	private Experiment post(Experiment entity) {
 		return target.path("/v1/experiments")
 				.request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(entity, MediaType.APPLICATION_JSON_TYPE), Experiment.class);
 	}
 
+	
+	private List<ExperimentDTO> random(UserDTO user) {
+		return target.path("/v1/public/users-experiments")
+				.request(MediaType.APPLICATION_JSON)
+				.post(Entity.entity(user, MediaType.APPLICATION_JSON_TYPE), List.class);
+	}
 	private List<Experiment> list(String search) {
 		return target.path("/v1/experiments")
 				.queryParam("search", search)

@@ -5,7 +5,6 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
@@ -27,10 +26,6 @@ public class DefaultRepository<T> {
 
 	public T edit(T entity) {
 		return entityManager.merge(entity);
-	}
-
-	public void delete(EntityPathBase<T> entity, Predicate predicate) {
-		new JPADeleteClause(entityManager, entity).where(predicate).execute();
 	}
 
 	public List<T> list(EntityPathBase<T> from, Predicate predicate, Expression<T> select) {

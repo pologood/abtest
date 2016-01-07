@@ -8,11 +8,11 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.softexpert.business.exception.FeatureEnablingException;
+import com.softexpert.business.exception.ExperimentEnablingException;
 import com.softexpert.persistence.QExperiment;
 import com.softexpert.repository.ExperimentRepository;
 
-public class FeatureEnablingServiceTest {
+public class ExperimentEnablingServiceTest {
 
 	private static final long ID = 1L;
 	@InjectMocks
@@ -26,27 +26,27 @@ public class FeatureEnablingServiceTest {
 	}
 
 	@Test
-	public void enableFeature()  throws FeatureEnablingException{
+	public void enableFeature()  throws ExperimentEnablingException{
 		Mockito.when(repository.toogleState(true, createPredicate(ID, false))).thenReturn(1L);
 		service.enabling(ID, true);
 		Mockito.verify(repository).toogleState(true, createPredicate(ID, false));
 	}
 	
 	@Test
-	public void disbleFeature()  throws FeatureEnablingException{
+	public void disbleFeature()  throws ExperimentEnablingException{
 		Mockito.when(repository.toogleState(false, createPredicate(ID, true))).thenReturn(1L);
 		service.enabling(ID, false);
 		Mockito.verify(repository).toogleState(false, createPredicate(ID, true));
 	}
 	
-	@Test(expected=FeatureEnablingException.class)
-	public void enableFeatureWhenItEnabled()  throws FeatureEnablingException{
+	@Test(expected=ExperimentEnablingException.class)
+	public void enableFeatureWhenItEnabled()  throws ExperimentEnablingException{
 		Mockito.when(repository.toogleState(true, createPredicate(ID, false))).thenReturn(0L);
 		service.enabling(ID, true);
 	}
 	
-	@Test(expected=FeatureEnablingException.class)
-	public void disableFeatureWhenItDisabled()  throws FeatureEnablingException{
+	@Test(expected=ExperimentEnablingException.class)
+	public void disableFeatureWhenItDisabled()  throws ExperimentEnablingException{
 		Mockito.when(repository.toogleState(false, createPredicate(ID, true))).thenReturn(0L);
 		service.enabling(ID, false);
 	}
