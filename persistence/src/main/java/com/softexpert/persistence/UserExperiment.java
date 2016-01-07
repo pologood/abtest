@@ -8,8 +8,15 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 @Entity
 @SequenceGenerator(name="seq_usertest", initialValue=1)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class UserExperiment {
 
 	@Id
