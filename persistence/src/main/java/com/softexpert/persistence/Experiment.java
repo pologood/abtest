@@ -42,8 +42,14 @@ public class Experiment {
 
 	public String description;
 
+	@ElementCollection
+	@CollectionTable(name = "domains", joinColumns = @JoinColumn(name = "domain_id") )
+	@Column(name = "domains")
 	public List<String> domains;
 
+	@ElementCollection
+	@CollectionTable(name = "groups", joinColumns = @JoinColumn(name = "group_id") )
+	@Column(name = "groups")
 	public List<String> groups;
 
 	@ElementCollection
