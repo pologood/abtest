@@ -25,8 +25,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.softexpert.persistence.Variation;
+import com.softexpert.dto.ExperimentDTO;
+import com.softexpert.dto.UserDTO;
 import com.softexpert.persistence.Experiment;
+import com.softexpert.persistence.Variation;
 
 @RunWith(Arquillian.class)
 public class ExperimentResourceIT {
@@ -67,14 +69,15 @@ public class ExperimentResourceIT {
 	@Test
 	public void postTests() throws Exception {
 		String name = "name";
-		List<Variation> tests = Arrays.asList(Variation.builder().name("A").build(), Variation.builder().name("B").build());
+		List<Variation> tests = Arrays.asList(Variation.builder().name("A").build(),
+				Variation.builder().name("B").build());
 		Experiment entity = find(post(name, true, tests).id);
 		MatcherAssert.assertThat(entity.variations, Matchers.hasSize(2));
 	}
 
 	@Test
 	public void list() throws Exception {
-		String name = "new name "+System.currentTimeMillis();
+		String name = "new name " + System.currentTimeMillis();
 		post(name, true, null);
 		List<Experiment> list = list(name);
 		MatcherAssert.assertThat(list, Matchers.hasSize(1));
@@ -110,39 +113,45 @@ public class ExperimentResourceIT {
 		MatcherAssert.assertThat(httpStatus, Matchers.equalTo(404));
 	}
 
+	@Test
+	public void randomTest() throws Exception {
+		Experiment experiment = Experiment.builder().name("DEFAULT_FRAME").enabled(true)
+				.percentage(new BigDecimal(100D)).variations(Arrays.asList(Variation.builder().name("NEW").build()))
+				.domains("www.demobr.com;www.softexpert.com").groups("TEC;DES").build();
+		post(experiment);
+		String experiments = random(UserDTO.builder().name("Alisson Medeiros").login("alisson.muller")
+				.host("www.softexpert.com").department("TEC").build());
+		MatcherAssert.assertThat(experiments, Matchers.equalTo("[{\"name\":\"DEFAULT_FRAME\",\"variationName\":\"NEW\"}]"));
+	}
+
 	private Experiment post(String name, boolean enabled, List<Variation> tests) {
-		Experiment entity = Experiment.builder()
-				.name(name)
-				.enabled(enabled)
-				.percentage(BigDecimal.TEN)
-				.variations(tests)
-				.users(Arrays.asList("A","B"))
-				.build();
-		return target.path("/v1/experiments")
-				.request(MediaType.APPLICATION_JSON)
+		return post(Experiment.builder().name(name).enabled(enabled).percentage(BigDecimal.TEN).variations(tests)
+				.users("A,B").build());
+	}
+
+	private Experiment post(Experiment entity) {
+		return target.path("/v1/experiments").request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(entity, MediaType.APPLICATION_JSON_TYPE), Experiment.class);
 	}
 
+	private String random(UserDTO user) {
+		return target.path("/v1/public/users-experiments").request(MediaType.APPLICATION_JSON)
+				.post(Entity.entity(user, MediaType.APPLICATION_JSON_TYPE), String.class);
+	}
+
 	private List<Experiment> list(String search) {
-		return target.path("/v1/experiments")
-				.queryParam("search", search)
-				.request(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(List.class);
+		return target.path("/v1/experiments").queryParam("search", search).request(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON).get(List.class);
 	}
 
 	private Experiment find(long id) {
-		return target.path("/v1/experiments/" + id)
-				.request(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-				.get(Experiment.class);
+		return target.path("/v1/experiments/" + id).request(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON).get(Experiment.class);
 	}
 
 	private int enabling(long id, boolean state) {
-		return target.path("/v1/experiments/" + id + "/enabling")
-				.request(MediaType.APPLICATION_JSON)
-				.put(Entity.entity(state, MediaType.APPLICATION_JSON_TYPE))
-				.getStatus();
+		return target.path("/v1/experiments/" + id + "/enabling").request(MediaType.APPLICATION_JSON)
+				.put(Entity.entity(state, MediaType.APPLICATION_JSON_TYPE)).getStatus();
 	}
 
 }

@@ -12,4 +12,5 @@
 		<servlet-name>javax.ws.rs.core.Application</servlet-name>
 		<url-pattern>/v1/*</url-pattern>
 	</servlet-mapping>
+	
 </web-app>

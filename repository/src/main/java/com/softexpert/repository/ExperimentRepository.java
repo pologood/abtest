@@ -19,9 +19,9 @@ public class ExperimentRepository {
 	@Transactional
 	public long toogleState(Boolean state, Predicate predicate){
 		return new JPAUpdateClause(entityManager, QExperiment.experiment)
-				.set( QExperiment.experiment.enabled, state)
-				.where(predicate)
-				.execute();
+			.set( QExperiment.experiment.enabled, state)
+			.where(predicate)
+			.execute();
 	}
 	
 	public Experiment findById(Predicate predicate, ConstructorExpression<Experiment> constructor){
@@ -29,6 +29,6 @@ public class ExperimentRepository {
 			.where(predicate)
 			.select(constructor)
 			.fetchFirst();
-	}
+}
 	
 }

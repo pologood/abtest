@@ -40,7 +40,7 @@ public class ExperimentLoadService {
 					createABTestExpressionConstructor());
 			return feature;
 		} catch (Exception e) {
-			throw new AppException(SEARCH_ERROR);
+			throw new AppException(SEARCH_ERROR, e);
 		}
 	}
 

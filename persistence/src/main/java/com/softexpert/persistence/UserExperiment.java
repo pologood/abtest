@@ -10,23 +10,25 @@ import javax.persistence.SequenceGenerator;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@SequenceGenerator(name="seq_usertest", initialValue=1)
+@SequenceGenerator(name = "seq_usertest", initialValue = 1)
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = false, of = "id")
 @Builder
 public class UserExperiment {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq_usertest")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_usertest")
 	public Long id;
 	@ManyToOne(fetch = FetchType.LAZY)
 	public User user;
 	@ManyToOne(fetch = FetchType.LAZY)
-	public Variation variation; 
+	public Variation variation;
 	@ManyToOne(fetch = FetchType.LAZY)
-	public Experiment experiment; 
-	
+	public Experiment experiment;
+
 }

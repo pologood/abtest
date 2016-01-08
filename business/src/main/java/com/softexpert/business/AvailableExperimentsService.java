@@ -1,17 +1,19 @@
 package com.softexpert.business;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 
+import com.querydsl.core.types.ConstructorExpression;
+import com.querydsl.core.types.Projections;
 import com.softexpert.persistence.Experiment;
 import com.softexpert.persistence.QExperiment;
+import com.softexpert.persistence.QVariation;
 import com.softexpert.persistence.Variation;
 import com.softexpert.repository.AvailableExperimentsRepository;
 
@@ -21,8 +23,9 @@ public class AvailableExperimentsService {
 	@Inject
 	private AvailableExperimentsRepository repository;
 
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<Experiment> getAvailableExperiments() {
-		List<Variation> variations = repository.list(QExperiment.experiment.enabled.isTrue());
+		List<Variation> variations = repository.list(QExperiment.experiment.enabled.isTrue(), buildConstructor());
 		List<Experiment> experiments = new ArrayList<>();
 		variations.stream().forEach(variation -> {
 			addVariant(experiments, variation);
@@ -39,9 +42,10 @@ public class AvailableExperimentsService {
 	}
 
 	private Experiment getExperiment(List<Experiment> experiments, Variation variation) {
-		if (!experiments.isEmpty()){
-			Optional<Experiment> experiment = experiments.stream().filter(e -> e.id.equals(variation.experiment.id)).findFirst();
-			if(experiment.isPresent())
+		if (!experiments.isEmpty()) {
+			Optional<Experiment> experiment = experiments.stream().filter(e -> e.id.equals(variation.experiment.id))
+					.findFirst();
+			if (experiment.isPresent())
 				return experiment.get();
 		}
 		return null;
@@ -52,5 +56,10 @@ public class AvailableExperimentsService {
 		experiment.variations = new ArrayList<>();
 		experiment.variations.add(variant);
 		return experiment;
+	}
+
+	private ConstructorExpression<Variation> buildConstructor() {
+		return Projections.constructor(Variation.class, QVariation.variation.id, QVariation.variation.name,
+				QVariation.variation.experiment);
 	}
 }

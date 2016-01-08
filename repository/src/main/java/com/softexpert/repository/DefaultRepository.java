@@ -3,15 +3,15 @@ package com.softexpert.repository;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.EntityPathBase;
 import com.querydsl.jpa.HQLTemplates;
-import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
 
 @Stateless
@@ -20,6 +20,7 @@ public class DefaultRepository<T> {
 	@Inject
 	private EntityManager entityManager;
 
+	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 	public T save(T entity) {
 		entityManager.persist(entity);
 		return entity;
@@ -27,10 +28,6 @@ public class DefaultRepository<T> {
 
 	public T edit(T entity) {
 		return entityManager.merge(entity);
-	}
-
-	public void delete(EntityPathBase<T> entity, Predicate predicate) {
-		new JPADeleteClause(entityManager, entity).where(predicate).execute();
 	}
 
 	public List<T> list(EntityPathBase<T> from, Predicate predicate, Expression<T> select) {

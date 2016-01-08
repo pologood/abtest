@@ -14,31 +14,33 @@ import javax.persistence.SequenceGenerator;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
-@SequenceGenerator(name="seq_user", initialValue=1)
+@SequenceGenerator(name = "seq_user", initialValue = 1)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode(callSuper = false, of = "id")
 public class User {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq_user")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_user")
 	public Long id;
-	
+
 	public String code;
 
 	public String name;
-	
+
 	public String login;
-	
-	public String group;
-	
+
+	public String department;
+
 	public String host;
-	
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "USER_ID")
-	public List<UserExperiment> tests;
-	
+	public List<UserExperiment> experiments;
+
 }

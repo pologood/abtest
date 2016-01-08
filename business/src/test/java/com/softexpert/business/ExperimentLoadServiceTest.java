@@ -27,7 +27,7 @@ import com.softexpert.repository.DefaultRepository;
 import com.softexpert.repository.ExperimentRepository;
 import com.softexpert.repository.VariationRepository;
 
-public class FeatureLoadServiceTest {
+public class ExperimentLoadServiceTest {
 
 	private static final long ID = 1L;
 	@InjectMocks
@@ -90,7 +90,7 @@ public class FeatureLoadServiceTest {
 	}
 
 	private ConstructorExpression<Variation> createABTestConstructor() {
-		return Projections.constructor(Variation.class, QVariation.variation.id,QVariation.variation.name);
+		return Projections.constructor(Variation.class, QVariation.variation.id, QVariation.variation.name);
 	}
 	
 	private ConstructorExpression<Experiment> createFeatureConstructiorExpression() {
