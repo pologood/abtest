@@ -25,7 +25,7 @@ public class RandomVariationService {
 	@Inject
 	private RandomUserExperimentService randomVariationRuleService;
 	@Inject
-	private PersistenceService<User> service;
+	private UserSaveService userSaveService;
 	@Inject
 	private UserExperimentService userExperimentService;
 
@@ -36,24 +36,10 @@ public class RandomVariationService {
 			user = getUser(userDTO);
 			List<UserExperiment> experiments = randomExperiments(user);
 			List<ExperimentDTO> dto = toDto(experiments);
-			save(user, experiments);
+			userSaveService.save(user, experiments);
 			return dto;
 		}
 		return toDto(user.experiments);
-	}
-
-	private void save(User user, List<UserExperiment> experiments) throws AppException {
-		user.experiments = new ArrayList<>();
-		experiments.stream().forEach(experiment -> {
-			user.experiments
-					.add(UserExperiment.builder()
-							.experiment(Experiment.builder().id(experiment.experiment.id).build())
-							.variation(Variation.builder().id(experiment.variation.id).build())
-							.user(user)
-							.build());
-		});
-		service.create(user);
-
 	}
 
 	private List<UserExperiment> randomExperiments(User user) throws AppException {

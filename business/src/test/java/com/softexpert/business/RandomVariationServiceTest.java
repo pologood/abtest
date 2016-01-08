@@ -34,7 +34,7 @@ public class RandomVariationServiceTest {
 	@Spy
 	private RandomUserExperimentService randomVariationRuleService = new RandomUserExperimentService();
 	@Mock
-	private PersistenceService<User> uesrService;
+	private UserSaveService userSaveService;
 	@Mock
 	private UserExperimentService userExperimentService;
 
@@ -50,6 +50,7 @@ public class RandomVariationServiceTest {
 		MatcherAssert.assertThat(experiments, Matchers.hasSize(1));
 		MatcherAssert.assertThat(experiments.get(0).name, Matchers.equalTo("DEFAULT_FRAME"));
 		MatcherAssert.assertThat(experiments.get(0).variationName, Matchers.nullValue());
+		Mockito.verify(userSaveService).save(Mockito.any(User.class), Mockito.anyList());
 	}
 
 	@Test
@@ -58,6 +59,7 @@ public class RandomVariationServiceTest {
 		List<ExperimentDTO> experiments = service.random(createUser());
 		MatcherAssert.assertThat(experiments.get(0).name, Matchers.equalTo("DEFAULT_FRAME"));
 		MatcherAssert.assertThat(experiments.get(0).variationName, Matchers.equalTo("NEW"));
+		Mockito.verify(userSaveService).save(Mockito.any(User.class), Mockito.anyList());
 	}
 
 	@Test
@@ -68,6 +70,7 @@ public class RandomVariationServiceTest {
 				createExperiment("PORTAL", new BigDecimal(0D), "NEW", "DEFAULT")));
 		List<ExperimentDTO> experiments = service.random(createUser());
 		MatcherAssert.assertThat(experiments, Matchers.hasSize(4));
+		Mockito.verify(userSaveService).save(Mockito.any(User.class), Mockito.anyList());
 	}
 	
 	@Test
@@ -78,6 +81,7 @@ public class RandomVariationServiceTest {
 		MatcherAssert.assertThat(experiments, Matchers.hasSize(1));
 		MatcherAssert.assertThat(experiments.get(0).name, Matchers.equalTo("DEFAULT_FRAME"));
 		MatcherAssert.assertThat(experiments.get(0).variationName, Matchers.equalTo("NEW"));
+		Mockito.verify(userSaveService, Mockito.never()).save(Mockito.any(User.class), Mockito.anyList());
 	}
 
 	private User createExistentUser(){
