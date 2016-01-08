@@ -53,7 +53,7 @@ public class ExperimentEnablingServiceTest {
 
 
 	private BooleanExpression createPredicate(long id, boolean state) {
-		return QExperiment.experiment.id.eq(id).andAnyOf(QExperiment.experiment.enabled.eq(!state).or(QExperiment.experiment.enabled.isNull()));
+		return QExperiment.experiment.id.eq(id).andAnyOf(QExperiment.experiment.enabled.eq(state).or(QExperiment.experiment.enabled.isNull()));
 	}
 
 }
