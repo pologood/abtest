@@ -46,8 +46,11 @@ public class RandomVariationService {
 		user.experiments = new ArrayList<>();
 		experiments.stream().forEach(experiment -> {
 			user.experiments
-					.add(UserExperiment.builder().experiment(Experiment.builder().id(experiment.experiment.id).build())
-							.variation(Variation.builder().id(experiment.variation.id).build()).build());
+					.add(UserExperiment.builder()
+							.experiment(Experiment.builder().id(experiment.experiment.id).build())
+							.variation(Variation.builder().id(experiment.variation.id).build())
+							.user(user)
+							.build());
 		});
 		service.create(user);
 

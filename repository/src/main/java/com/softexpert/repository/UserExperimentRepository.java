@@ -8,6 +8,8 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.HQLTemplates;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -25,7 +27,7 @@ public class UserExperimentRepository {
 	private EntityManager entityManager;
 
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<UserExperiment> getUserExperiments(UserDTO userDTO) {
+	public List<UserExperiment> getUserExperiments(Expression<UserExperiment> select,Predicate predicate) {
 		QUser user = QUser.user;
 		QUserExperiment userexperiment = QUserExperiment.userExperiment;
 		QVariation variation = QVariation.variation;
@@ -33,7 +35,8 @@ public class UserExperimentRepository {
 		return new JPAQuery<UserExperiment>(entityManager, HQLTemplates.DEFAULT).from(userexperiment)
 				.join(userexperiment.user, user).join(userexperiment.variation, variation)
 				.join(userexperiment.experiment, experiment)
-				.select(Projections.constructor(UserExperiment.class, userexperiment.id, user, variation, experiment))
+				.select(select)
+				.where(predicate)
 				.fetch();
 	}
 

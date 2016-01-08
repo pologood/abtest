@@ -119,11 +119,9 @@ public class ExperimentResourceIT {
 				.percentage(new BigDecimal(100D)).variations(Arrays.asList(Variation.builder().name("NEW").build()))
 				.domains("www.demobr.com;www.softexpert.com").groups("TEC;DES").build();
 		post(experiment);
-		List<ExperimentDTO> experiments = random(UserDTO.builder().name("Alisson Medeiros").login("alisson.muller")
+		String experiments = random(UserDTO.builder().name("Alisson Medeiros").login("alisson.muller")
 				.host("www.softexpert.com").department("TEC").build());
-		MatcherAssert.assertThat(experiments, Matchers.hasSize(1));
-		MatcherAssert.assertThat(experiments.get(0).name, Matchers.equalTo("DEFAULT_FRAME"));
-		MatcherAssert.assertThat(experiments.get(0).variationName, Matchers.equalTo("NEW"));
+		MatcherAssert.assertThat(experiments, Matchers.equalTo("[{\"name\":\"DEFAULT_FRAME\",\"variationName\":\"NEW\"}]"));
 	}
 
 	private Experiment post(String name, boolean enabled, List<Variation> tests) {
@@ -136,9 +134,9 @@ public class ExperimentResourceIT {
 				.post(Entity.entity(entity, MediaType.APPLICATION_JSON_TYPE), Experiment.class);
 	}
 
-	private List<ExperimentDTO> random(UserDTO user) {
+	private String random(UserDTO user) {
 		return target.path("/v1/public/users-experiments").request(MediaType.APPLICATION_JSON)
-				.post(Entity.entity(user, MediaType.APPLICATION_JSON_TYPE), List.class);
+				.post(Entity.entity(user, MediaType.APPLICATION_JSON_TYPE), String.class);
 	}
 
 	private List<Experiment> list(String search) {

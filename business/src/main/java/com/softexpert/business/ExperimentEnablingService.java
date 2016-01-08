@@ -21,7 +21,7 @@ public class ExperimentEnablingService {
 	}
 
 	private long executeUpdate(Long id, Boolean state) {
-		return repository.toogleState(state, QExperiment.experiment.id.eq(id).and(QExperiment.experiment.enabled.eq(!state)));
+		return repository.toogleState(state, QExperiment.experiment.id.eq(id).andAnyOf(QExperiment.experiment.enabled.eq(!state).or(QExperiment.experiment.enabled.isNull())));
 	}
 	
 	private boolean hasExecutedUpdate(long linesChanged) {
