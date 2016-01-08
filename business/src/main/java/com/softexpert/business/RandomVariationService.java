@@ -15,7 +15,6 @@ import com.softexpert.dto.UserDTO;
 import com.softexpert.persistence.Experiment;
 import com.softexpert.persistence.User;
 import com.softexpert.persistence.UserExperiment;
-import com.softexpert.persistence.Variation;
 
 @Stateless
 public class RandomVariationService {
@@ -32,14 +31,17 @@ public class RandomVariationService {
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<ExperimentDTO> random(UserDTO userDTO) throws AppException {
 		User user = userExperimentService.getUser(userDTO);
-		if (user == null) {
-			user = getUser(userDTO);
-			List<UserExperiment> experiments = randomExperiments(user);
-			List<ExperimentDTO> dto = toDto(experiments);
-			userSaveService.save(user, experiments);
-			return dto;
-		}
+		if (user == null) 
+			return randomNewUser(userDTO);
 		return toDto(user.experiments);
+	}
+
+	private List<ExperimentDTO> randomNewUser(UserDTO userDTO) throws AppException {
+		User user = getUser(userDTO);
+		List<UserExperiment> experiments = randomExperiments(user);
+		List<ExperimentDTO> dto = toDto(experiments);
+		userSaveService.save(user, experiments);
+		return dto;
 	}
 
 	private List<UserExperiment> randomExperiments(User user) throws AppException {
