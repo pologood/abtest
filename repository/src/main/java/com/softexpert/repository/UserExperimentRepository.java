@@ -25,7 +25,7 @@ public class UserExperimentRepository {
 	private EntityManager entityManager;
 
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<UserExperiment> userExperiments(UserDTO userDTO) {
+	public List<UserExperiment> getUserExperiments(UserDTO userDTO) {
 		QUser user = QUser.user;
 		QUserExperiment userexperiment = QUserExperiment.userExperiment;
 		QVariation variation = QVariation.variation;

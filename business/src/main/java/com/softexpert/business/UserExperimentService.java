@@ -17,7 +17,7 @@ public class UserExperimentService {
 	private UserExperimentRepository repository;
 
 	public User getUser(UserDTO userDTO) {
-		List<UserExperiment> userExperiments = repository.userExperiments(userDTO);
+		List<UserExperiment> userExperiments = repository.getUserExperiments(userDTO);
 		if (userExperiments.isEmpty())
 			return null;
 		User user = userExperiments.get(0).user;

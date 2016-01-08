@@ -29,7 +29,7 @@ public class ValidationServiceTest {
 	}
 
 	@Test(expected = AppException.class)
-	public void validate() throws AppException {
+	public void validateWithError() throws AppException {
 		Experiment sample = Experiment.builder().id(1L).name("A").build();
 		Set<ConstraintViolation<Experiment>> violations = new HashSet<>();
 		ConstraintViolation constraintViolation = Mockito.mock(ConstraintViolation.class);
@@ -39,4 +39,10 @@ public class ValidationServiceTest {
 		service.validate(sample);
 	}
 
+	@Test
+	public void validate() throws AppException {
+		Experiment sample = Experiment.builder().id(1L).name("A").build();
+		service.validate(sample);
+		Mockito.verify(validator).validate(sample);
+	}
 }

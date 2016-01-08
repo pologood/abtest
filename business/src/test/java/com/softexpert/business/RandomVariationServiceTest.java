@@ -22,6 +22,8 @@ import com.softexpert.dto.ExperimentDTO;
 import com.softexpert.dto.UserDTO;
 import com.softexpert.persistence.Experiment;
 import com.softexpert.persistence.User;
+import com.softexpert.persistence.UserExperiment;
+import com.softexpert.persistence.Variation;
 
 public class RandomVariationServiceTest {
 
@@ -67,7 +69,27 @@ public class RandomVariationServiceTest {
 		List<ExperimentDTO> experiments = service.random(createUser());
 		MatcherAssert.assertThat(experiments, Matchers.hasSize(4));
 	}
+	
+	@Test
+	public void randomWithExistentUser() throws AppException {
+		UserDTO userDTO = createUser();
+		Mockito.when(userExperimentService.getUser(userDTO)).thenReturn(createExistentUser());
+		List<ExperimentDTO> experiments = service.random(createUser());
+		MatcherAssert.assertThat(experiments, Matchers.hasSize(1));
+		MatcherAssert.assertThat(experiments.get(0).name, Matchers.equalTo("DEFAULT_FRAME"));
+		MatcherAssert.assertThat(experiments.get(0).variationName, Matchers.equalTo("NEW"));
+	}
 
+	private User createExistentUser(){
+		Experiment experiment = Experiment.builder().name("DEFAULT_FRAME").build();
+		Variation variation = Variation.builder().name("NEW").build();
+		List<UserExperiment> experiments = Arrays.asList(UserExperiment
+				.builder()
+				.experiment(experiment)
+				.variation(variation)
+				.build());
+		return User.builder().experiments(experiments).build();
+	}
 	private UserDTO createUser() {
 		return UserDTO.builder().code("1").name("João Silva").login("joao.silva").department("Tec")
 				.host("www.softexpert.com").build();
