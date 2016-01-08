@@ -29,7 +29,7 @@ public class RandomUserExperimentService {
 	private UserExperiment randomWithCondition(User user, Experiment experiment) {
 		List<String> users = toList(experiment.users);
 		List<String> domains = toList(experiment.domains);
-		List<String> groups =  toList(experiment.groups);
+		List<String> groups = toList(experiment.groups);
 		if (isRandomWithGroupCondition(user, domains, groups))
 			return randomExperiment(experiment);
 		else if (isRandoWithUserCondition(user, domains, users))
@@ -47,7 +47,7 @@ public class RandomUserExperimentService {
 
 	private boolean isRandomWithDomainCondition(User user, List<String> domains, List<String> groups,
 			List<String> users) {
-		return !domains.isEmpty() && domains.contains(user.host) && groups.isEmpty()&& users.isEmpty();
+		return !domains.isEmpty() && domains.contains(user.host) && groups.isEmpty() && users.isEmpty();
 	}
 
 	private boolean isRandoWithUserCondition(User user, List<String> domains, List<String> users) {
@@ -55,7 +55,8 @@ public class RandomUserExperimentService {
 	}
 
 	private boolean isRandomWithGroupCondition(User user, List<String> domains, List<String> groups) {
-		return !groups.isEmpty()	&& (groups.contains(user.group) && !domains.isEmpty() && domains.contains(user.host));
+		return !groups.isEmpty()
+				&& (groups.contains(user.department) && !domains.isEmpty() && domains.contains(user.host));
 	}
 
 	private boolean isRandomWithoutCondition(String domains, String groups, String users) {

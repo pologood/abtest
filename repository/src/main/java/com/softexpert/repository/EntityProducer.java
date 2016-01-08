@@ -11,8 +11,8 @@ import javax.persistence.PersistenceContext;
 public class EntityProducer implements Serializable {
 
 	private static final long serialVersionUID = -5165368545535190902L;
-	
-	@PersistenceContext(name = "ExampleDS")
+
+	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Produces

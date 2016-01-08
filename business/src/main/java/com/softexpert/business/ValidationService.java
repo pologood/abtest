@@ -14,8 +14,8 @@ public class ValidationService {
 
 	@Inject
 	private Validator validator;
-	
-	public <T> void  validation(T t) throws AppException {
+
+	public <T> void validate(T t) throws AppException {
 		Set<ConstraintViolation<T>> violations = validator.validate(t);
 		if (!violations.isEmpty())
 			throw new AppException(violations.iterator().next().getMessage());

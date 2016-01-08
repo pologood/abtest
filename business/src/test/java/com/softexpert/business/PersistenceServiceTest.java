@@ -1,11 +1,5 @@
 package com.softexpert.business;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
-
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -17,9 +11,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.softexpert.business.exception.AppException;
 import com.softexpert.persistence.Experiment;
-import com.softexpert.persistence.QExperiment;
 import com.softexpert.repository.DefaultRepository;
-import com.softexpert.repository.ExperimentRepository;
 
 public class PersistenceServiceTest {
 
@@ -29,10 +21,8 @@ public class PersistenceServiceTest {
 	@Mock
 	private DefaultRepository<Experiment> repository;
 	@Mock
-	private Validator validator;
-	@Mock
-	private ExperimentRepository featureRepository;
-	
+	private ValidationService validator;
+
 	@Before
 	public void init() {
 		MockitoAnnotations.initMocks(this);
@@ -41,12 +31,7 @@ public class PersistenceServiceTest {
 	@Test(expected = AppException.class)
 	public void createWithValidationError() throws AppException {
 		Experiment sample = create(ID, "IPI");
-		Set<ConstraintViolation<Experiment>> violations = new HashSet<>();
-		ConstraintViolation constraintViolation = Mockito.mock(ConstraintViolation.class);
-		violations.add(constraintViolation);
-		Mockito.when(constraintViolation.getMessage()).thenReturn("Error");
-		Mockito.when(validator.validate(sample)).thenReturn(violations);
-
+		Mockito.doThrow(new AppException("error")).when(validator).validate(sample);
 		service.create(sample);
 	}
 
@@ -67,7 +52,7 @@ public class PersistenceServiceTest {
 		Mockito.verify(repository).save(sample);
 		Mockito.verify(validator).validate(sample);
 	}
-	
+
 	@Test
 	public void edit() throws AppException {
 		Experiment sample = create(ID, "IPI");
@@ -88,13 +73,9 @@ public class PersistenceServiceTest {
 		Mockito.verify(repository).edit(sample);
 		Mockito.verify(validator).validate(sample);
 	}
-	
 
 	private Experiment create(Long id, String name) {
-		return Experiment.builder()
-				.id(id)
-				.name(name)
-				.build();
+		return Experiment.builder().id(id).name(name).build();
 	}
 
 }

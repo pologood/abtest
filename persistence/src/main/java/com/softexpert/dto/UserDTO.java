@@ -13,6 +13,6 @@ public class UserDTO {
 	public String name;
 	public String login;
 	public String host;
-	public String group;
-	
+	public String department;
+
 }
