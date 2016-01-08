@@ -32,9 +32,9 @@ public class RandomUserExperimentService {
 		List<String> groups = toList(experiment.groups);
 		if (isRandomWithGroupCondition(user, domains, groups))
 			return randomExperiment(experiment);
-		else if (isRandoWithUserCondition(user, domains, users))
+		if (isRandoWithUserCondition(user, domains, users))
 			return randomExperiment(experiment);
-		else if (isRandomWithDomainCondition(user, domains, groups, users))
+		if (isRandomWithDomainCondition(user, domains, groups, users))
 			return randomExperiment(experiment);
 		return createEmptyExperiment(experiment);
 	}
