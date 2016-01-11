@@ -39,6 +39,7 @@ public class Experiment {
 	public Long id;
 
 	@Size(min = 1)
+	@Column(unique = true)
 	public String name;
 
 	public String description;
