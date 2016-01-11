@@ -22,3 +22,6 @@ deployment:
       - docker login -e "$DOCKER_EMAIL" -u "$DOCKER_USER" -p "$DOCKER_PASS"
       - docker build -t "alissonmedeiros/abtest:$CIRCLE_BUILD_NUM" .
       - docker push "alissonmedeiros/abtest:$CIRCLE_BUILD_NUM"
+      - sed -i'' -e "s;%BUILD_NUM%;$CIRCLE_BUILD_NUM;g" ./.deploy/Dockerrun.aws.json
+      - cd .deploy && eb init -r sa-east-1a abtest
+      - cd .deploy && eb deploy -l $CIRCLE_BUILD_NUM
