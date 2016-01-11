@@ -25,11 +25,11 @@ public class UserExperiment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_usertest")
 	public Long id;
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.REMOVE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	public User user;
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.REMOVE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	public Variation variation;
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.REMOVE)
+	@ManyToOne(fetch = FetchType.LAZY)
 	public Experiment experiment;
 
 }
