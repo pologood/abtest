@@ -1,12 +1,24 @@
 machine:
   java:
     version: oraclejdk8
+  services:
+    - docker
+  python:
+    version: 2.7
 dependencies:
- override:
+  pre:
+    - pip install awsebcli
+  override:
   - mvn install
 test:
   override:
     - mvn integration-test -Pproduction
   post:
-    - mvn cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report -X -DrepoToken=wex90LJ7NyAHoySxGTl33uhFVdyGk7EEg -Pproduction
-
+    - mvn cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report -X -DrepoToken="$COVERALLS_TOKEN" -Pproduction
+deployment:
+  production:
+    branch: master
+    commands:
+      - docker login -e "$DOCKER_EMAIL" -u "$DOCKER_USER" -p "$DOCKER_PASS"
+      - docker build -t "alissonmedeiros/abtesr:$CIRCLE_BUILD_NUM" .
+      - docker push "alissonmedeiros/abtesr:$CIRCLE_BUILD_NUM"
