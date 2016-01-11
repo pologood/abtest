@@ -3,17 +3,18 @@ machine:
     version: oraclejdk8
   services:
     - docker
+  python:
+    version: 2.7
 dependencies:
   pre:
     - pip install awsebcli
- override:
+  override:
   - mvn install
 test:
   override:
     - mvn integration-test -Pproduction
   post:
     - mvn cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report -X -DrepoToken="$COVERALLS_TOKEN" -Pproduction
-
 deployment:
   production:
     branch: master
