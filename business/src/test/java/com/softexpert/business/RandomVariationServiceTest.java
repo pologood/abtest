@@ -32,7 +32,7 @@ public class RandomVariationServiceTest {
 	@Mock
 	private AvailableExperimentsService availableExperimentsService;
 	@Spy
-	private RandomUserExperimentService randomVariationRuleService = new RandomUserExperimentService();
+	private RandomUserExperimentService randomVariationRuleService = new RandomUserExperimentService(new ExperimentRandomService());
 	@Mock
 	private UserSaveService userSaveService;
 	@Mock

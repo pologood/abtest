@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 import com.softexpert.persistence.Experiment;
 import com.softexpert.persistence.User;
@@ -19,7 +20,9 @@ public class RandomUserExperimentServiceTest {
 
 	@InjectMocks
 	private RandomUserExperimentService service;
-
+	@Spy
+	private ExperimentRandomService experimentRandomService;
+	
 	@Before
 	public void init() {
 		MockitoAnnotations.initMocks(this);
@@ -190,8 +193,13 @@ public class RandomUserExperimentServiceTest {
 	}
 
 	private User createUser() {
-		return User.builder().code("1").name("João Silva").login("joao.silva").department("Tec")
-				.host("www.softexpert.com").build();
+		return User.builder()
+				.code("1")
+				.name("João Silva")
+				.login("joao.silva")
+				.department("Tec")
+				.host("www.softexpert.com")
+				.build();
 	}
 
 }
