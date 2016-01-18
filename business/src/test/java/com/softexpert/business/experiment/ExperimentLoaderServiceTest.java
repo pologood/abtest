@@ -57,11 +57,11 @@ public class ExperimentLoaderServiceTest {
 	@Test
 	public void find() throws AppException {
 		long testId = 89L;
-		Mockito.when(experimentRepository.findById(QExperiment.experiment.id.eq(ID), createFeatureConstructiorExpression())).thenReturn(create(ID, null));
+		Mockito.when(experimentRepository.findById(QExperiment.experiment.id.eq(ID), createFinderFeatureConstructiorExpression())).thenReturn(create(ID, null));
 		Mockito.when(variationRepository.list(QVariation.variation.experiment.id.eq(ID), createABTestConstructor())).thenReturn(Arrays.asList(Variation.builder().id(testId).build()));
 		Experiment sample = service.find(ID);
 		Mockito.verify(variationRepository).list(QVariation.variation.experiment.id.eq(ID), createABTestConstructor());
-		Mockito.verify(experimentRepository).findById(QExperiment.experiment.id.eq(ID), createFeatureConstructiorExpression());
+		Mockito.verify(experimentRepository).findById(QExperiment.experiment.id.eq(ID), createFinderFeatureConstructiorExpression());
 		MatcherAssert.assertThat(sample, Matchers.equalTo(create(ID, null)));
 		MatcherAssert.assertThat(sample.variations, Matchers.hasSize(1));
 		MatcherAssert.assertThat(sample.variations.get(0).id, Matchers.equalTo(testId));
@@ -98,6 +98,10 @@ public class ExperimentLoaderServiceTest {
 		return Projections.constructor(Experiment.class,QExperiment.experiment.id, QExperiment.experiment.name, QExperiment.experiment.enabled, QExperiment.experiment.percentage);
 	}
 
+	private ConstructorExpression<Experiment> createFinderFeatureConstructiorExpression() {
+		return Projections.constructor(Experiment.class,QExperiment.experiment.id, QExperiment.experiment.name, QExperiment.experiment.enabled, QExperiment.experiment.percentage, QExperiment.experiment.domains, QExperiment.experiment.groups, QExperiment.experiment.users);
+	}
+	
 	private Predicate getFilter(String schearch) {
 		return QExperiment.experiment.name.containsIgnoreCase(schearch);
 	}

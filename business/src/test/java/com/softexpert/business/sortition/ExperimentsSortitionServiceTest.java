@@ -1,7 +1,7 @@
 package com.softexpert.business.sortition;
 
-import static com.softexpert.business.experiment.ExperimentTestBuilder.createExperiment;
-import static com.softexpert.business.experiment.ExperimentTestBuilder.createSimpleExperiments;
+import static com.softexpert.business.experiment.ExperimentTestBuilder.createUserExperiment;
+import static com.softexpert.business.experiment.ExperimentTestBuilder.createSimpleUserExperiments;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -15,13 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 
 import com.softexpert.business.exception.AppException;
-import com.softexpert.business.experiment.AvailableExperimentsService;
-import com.softexpert.business.sortition.ElegibleSortitionService;
-import com.softexpert.business.sortition.ExperimentsSortitionService;
-import com.softexpert.business.sortition.UserExperimentSortitionService;
+import com.softexpert.business.experiment.UserExperimentService;
 import com.softexpert.business.user.UserSaveService;
 import com.softexpert.business.user.UserSearchService;
 import com.softexpert.dto.ExperimentDTO;
@@ -34,29 +30,25 @@ import com.softexpert.persistence.Variation;
 public class ExperimentsSortitionServiceTest {
 
 	@InjectMocks
-	private ExperimentsSortitionService service;
-	@Mock
-	private AvailableExperimentsService availableExperimentsService;
+	private UserExperimentService service;
 	@Mock
 	private UserSaveService userSaveService;
 	@Mock
 	private UserSearchService userExperimentService;
-	@Spy
-	private UserExperimentSortitionService experimentRandomService;
 	@Mock
-	private ElegibleSortitionService elegibleSortionService;
+	private ExperimentsSortitionService experimentsSortitionService;
+
 
 	@Before
 	public void init() {
 		MockitoAnnotations.initMocks(this);
-		Mockito.when(elegibleSortionService.isElegible(Mockito.any(User.class), Mockito.any(Experiment.class)))
-				.thenReturn(true);
 	}
 
 	@Test
 	public void randomWithAllUsersWithVariation() throws AppException {
-		mock(createSimpleExperiments());
-		List<ExperimentDTO> experiments = service.sortionOrSearch(createUser());
+		UserDTO createUser = createUser();
+		mock(createSimpleUserExperiments());
+		List<ExperimentDTO> experiments = service.sortionOrSearch(createUser);
 		MatcherAssert.assertThat(experiments, Matchers.hasSize(1));
 		MatcherAssert.assertThat(experiments.get(0).name, Matchers.equalTo("DEFAULT_FRAME"));
 		MatcherAssert.assertThat(experiments.get(0).variationName, Matchers.nullValue());
@@ -65,7 +57,7 @@ public class ExperimentsSortitionServiceTest {
 
 	@Test
 	public void randomWithAllUsersSimpleExperiment() throws AppException {
-		mock(createSimpleExperiments("NEW"));
+		mock(createSimpleUserExperiments("NEW"));
 		List<ExperimentDTO> experiments = service.sortionOrSearch(createUser());
 		MatcherAssert.assertThat(experiments.get(0).name, Matchers.equalTo("DEFAULT_FRAME"));
 		MatcherAssert.assertThat(experiments.get(0).variationName, Matchers.equalTo("NEW"));
@@ -74,10 +66,10 @@ public class ExperimentsSortitionServiceTest {
 
 	@Test
 	public void randomWithExperiments() throws AppException {
-		mock(Arrays.asList(createExperiment("DEFAULT_FRAME", new BigDecimal(100D), "NEW"),
-				createExperiment("DASHBOARD", new BigDecimal(50D), "NEW", "OLD"),
-				createExperiment("CHATS", new BigDecimal(0D)),
-				createExperiment("PORTAL", new BigDecimal(0D), "NEW", "DEFAULT")));
+		mock(Arrays.asList(createUserExperiment("DEFAULT_FRAME", new BigDecimal(100D), "NEW"),
+				createUserExperiment("DASHBOARD", new BigDecimal(50D), "NEW"),
+				createUserExperiment("CHATS", new BigDecimal(0D)),
+				createUserExperiment("PORTAL", new BigDecimal(0D), "NEW")));
 		List<ExperimentDTO> experiments = service.sortionOrSearch(createUser());
 		MatcherAssert.assertThat(experiments, Matchers.hasSize(4));
 		Mockito.verify(userSaveService).save(Mockito.any(User.class), Mockito.anyList());
@@ -94,17 +86,13 @@ public class ExperimentsSortitionServiceTest {
 		Mockito.verify(userSaveService, Mockito.never()).save(Mockito.any(User.class), Mockito.anyList());
 	}
 
-	@Test
 	public void randomWithIlegibileUser() throws AppException {
-		mock(createSimpleExperiments("NEW"));
-		Mockito.when(elegibleSortionService.isElegible(Mockito.any(User.class), Mockito.any(Experiment.class)))
-				.thenReturn(false);
+		mock(createSimpleUserExperiments("NEW"));
 		List<ExperimentDTO> experiments = service.sortionOrSearch(createUser());
 		MatcherAssert.assertThat(experiments, Matchers.hasSize(1));
 		MatcherAssert.assertThat(experiments.get(0).name, Matchers.equalTo("DEFAULT_FRAME"));
 		MatcherAssert.assertThat(experiments.get(0).variationName, Matchers.nullValue());
 		Mockito.verify(userSaveService).save(Mockito.any(User.class), Mockito.anyList());
-		Mockito.verify(experimentRandomService).createEmptyExperiment(Mockito.any(Experiment.class));
 
 	}
 
@@ -121,8 +109,8 @@ public class ExperimentsSortitionServiceTest {
 				.host("www.softexpert.com").build();
 	}
 
-	private void mock(List<Experiment> experiments) {
-		Mockito.when(availableExperimentsService.getAvailableExperiments()).thenReturn(experiments);
+	private void mock(List<UserExperiment> experiments) {
+		Mockito.when(experimentsSortitionService.sortition(Mockito.any(User.class))).thenReturn(experiments);
 	}
 
 }

@@ -18,7 +18,7 @@ import com.softexpert.persistence.User;
 import com.softexpert.persistence.UserExperiment;
 
 @Stateless
-public class XService {
+public class UserExperimentService {
 
 	@Inject
 	private UserSaveService userSaveService;
@@ -37,19 +37,26 @@ public class XService {
 
 	private List<ExperimentDTO> sortitionNewUser(UserDTO userDTO) throws AppException {
 		User user = getUser(userDTO);
-		List<UserExperiment> experiments = experimentsSortitionService.random(user);
+		List<UserExperiment> experiments = experimentsSortitionService.sortition(user);
 		userSaveService.save(user, experiments);
 		return toDto(experiments);
 	}
 
 	private ExperimentDTO toDto(UserExperiment userExperiment) {
-		return ExperimentDTO.builder().name(userExperiment.experiment.name).variationName(userExperiment.variation.name)
+		return ExperimentDTO.builder()
+				.name(userExperiment.experiment.name)
+				.variationName(userExperiment.variation.name)
 				.build();
 	}
 
 	private User getUser(UserDTO userDTO) {
-		return User.builder().code(userDTO.code).department(userDTO.department).host(userDTO.host).login(userDTO.login)
-				.name(userDTO.name).build();
+		return User.builder()
+				.code(userDTO.code)
+				.department(userDTO.department)
+				.host(userDTO.host)
+				.login(userDTO.login)
+				.name(userDTO.name)
+				.build();
 	}
 
 	private List<ExperimentDTO> toDto(List<UserExperiment> userExperiments) {

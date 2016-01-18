@@ -22,14 +22,16 @@ public class ExperimentsSortitionService {
 	@Inject
 	private ElegibleSortitionService elegibleSortitionService;
 
-	public List<UserExperiment> random(User user) {
+	public List<UserExperiment> sortition(User user) {
 		Collection<Experiment> experiments = availableExperimentsService.getAvailableExperiments();
 		List<UserExperiment> randomExperiments = new ArrayList<UserExperiment>();
-		experiments.stream().forEach(experiment -> randomExperiments.add(random(user, experiment)));
+		experiments.stream().forEach(experiment -> {
+			randomExperiments.add(sortitionExperiment(user, experiment));
+		});
 		return randomExperiments;
 	}
 
-	private UserExperiment random(User user, Experiment experiment) {
+	private UserExperiment sortitionExperiment(User user, Experiment experiment) {
 		if (elegibleSortitionService.isElegible(user, experiment))
 			return experimentRandomService.sortition(experiment);
 		return experimentRandomService.createEmptyExperiment(experiment);
