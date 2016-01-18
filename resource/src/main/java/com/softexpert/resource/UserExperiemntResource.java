@@ -10,8 +10,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-import com.softexpert.business.RandomVariationService;
 import com.softexpert.business.exception.AppException;
+import com.softexpert.business.sortition.ExperimentsSortitionService;
 import com.softexpert.dto.ExperimentDTO;
 import com.softexpert.dto.UserDTO;
 
@@ -21,11 +21,11 @@ import com.softexpert.dto.UserDTO;
 public class UserExperiemntResource {
 
 	@Inject
-	private RandomVariationService service;
+	private ExperimentsSortitionService service;
 
 	@POST
 	public List<ExperimentDTO> random(UserDTO user) throws AppException {
-		return service.random(user);
+		return service.sortion(user);
 	}
 
 }

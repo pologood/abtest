@@ -1,4 +1,4 @@
-package com.softexpert.business;
+package com.softexpert.business.experiment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
+import com.softexpert.business.experiment.AvailableExperimentsService;
 import com.softexpert.persistence.Experiment;
 import com.softexpert.persistence.QExperiment;
 import com.softexpert.persistence.QVariation;

@@ -14,11 +14,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import com.softexpert.business.ExperimentEnablingService;
-import com.softexpert.business.ExperimentLoadService;
 import com.softexpert.business.PersistenceService;
 import com.softexpert.business.exception.AppException;
 import com.softexpert.business.exception.ExperimentEnablingException;
+import com.softexpert.business.experiment.ExperimentEnablingService;
+import com.softexpert.business.experiment.ExperimentLoaderService;
 import com.softexpert.persistence.Experiment;
 
 @Path("experiments")
@@ -27,7 +27,7 @@ import com.softexpert.persistence.Experiment;
 public class ExperimentResource {
 
 	@Inject
-	private ExperimentLoadService service;
+	private ExperimentLoaderService service;
 	@Inject
 	private ExperimentEnablingService experimentEnablingService;
 	@Inject

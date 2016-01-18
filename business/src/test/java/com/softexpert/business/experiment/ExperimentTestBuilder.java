@@ -1,4 +1,4 @@
-package com.softexpert.business;
+package com.softexpert.business.experiment;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

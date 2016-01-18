@@ -1,4 +1,4 @@
-package com.softexpert.business;
+package com.softexpert.business.user;
 
 import java.util.List;
 
@@ -15,15 +15,15 @@ import com.softexpert.persistence.QUserExperiment;
 import com.softexpert.persistence.QVariation;
 import com.softexpert.persistence.User;
 import com.softexpert.persistence.UserExperiment;
-import com.softexpert.repository.UserExperimentRepository;
+import com.softexpert.repository.user.UserExperimentRepository;
 
 @Stateless
-public class UserExperimentService {
+public class UserSearchService {
 
 	@Inject
 	private UserExperimentRepository repository;
 
-	public User getUser(UserDTO userDTO) {
+	public User search(UserDTO userDTO) {
 		List<UserExperiment> userExperiments = repository.getUserExperiments(constructor(), condition(userDTO));
 		if (userExperiments.isEmpty())
 			return null;

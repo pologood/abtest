@@ -1,4 +1,4 @@
-package com.softexpert.business;
+package com.softexpert.business.user;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 
+import com.softexpert.business.PersistenceService;
 import com.softexpert.business.exception.AppException;
 import com.softexpert.persistence.Experiment;
 import com.softexpert.persistence.User;

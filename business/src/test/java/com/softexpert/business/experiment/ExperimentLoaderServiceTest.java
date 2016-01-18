@@ -1,4 +1,4 @@
-package com.softexpert.business;
+package com.softexpert.business.experiment;
 
 import static org.mockito.Mockito.when;
 
@@ -19,19 +19,20 @@ import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.softexpert.business.exception.AppException;
+import com.softexpert.business.experiment.ExperimentLoaderService;
 import com.softexpert.persistence.Experiment;
 import com.softexpert.persistence.QExperiment;
 import com.softexpert.persistence.QVariation;
 import com.softexpert.persistence.Variation;
 import com.softexpert.repository.DefaultRepository;
-import com.softexpert.repository.ExperimentRepository;
-import com.softexpert.repository.VariationRepository;
+import com.softexpert.repository.experiment.ExperimentRepository;
+import com.softexpert.repository.experiment.VariationRepository;
 
-public class ExperimentLoadServiceTest {
+public class ExperimentLoaderServiceTest {
 
 	private static final long ID = 1L;
 	@InjectMocks
-	private ExperimentLoadService service;
+	private ExperimentLoaderService service;
 	@Mock
 	private DefaultRepository<Experiment> repository;
 	@Mock
