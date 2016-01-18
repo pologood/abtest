@@ -1,4 +1,4 @@
-package com.softexpert.repository;
+package com.softexpert.repository.user;
 
 import java.util.List;
 

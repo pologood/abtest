@@ -1,4 +1,4 @@
-package com.softexpert.business;
+package com.softexpert.business.experiment;
 
 import static org.mockito.Mockito.when;
 
@@ -19,19 +19,20 @@ import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.softexpert.business.exception.AppException;
+import com.softexpert.business.experiment.ExperimentLoaderService;
 import com.softexpert.persistence.Experiment;
 import com.softexpert.persistence.QExperiment;
 import com.softexpert.persistence.QVariation;
 import com.softexpert.persistence.Variation;
 import com.softexpert.repository.DefaultRepository;
-import com.softexpert.repository.ExperimentRepository;
-import com.softexpert.repository.VariationRepository;
+import com.softexpert.repository.experiment.ExperimentRepository;
+import com.softexpert.repository.experiment.VariationRepository;
 
-public class ExperimentLoadServiceTest {
+public class ExperimentLoaderServiceTest {
 
 	private static final long ID = 1L;
 	@InjectMocks
-	private ExperimentLoadService service;
+	private ExperimentLoaderService service;
 	@Mock
 	private DefaultRepository<Experiment> repository;
 	@Mock
@@ -56,11 +57,11 @@ public class ExperimentLoadServiceTest {
 	@Test
 	public void find() throws AppException {
 		long testId = 89L;
-		Mockito.when(experimentRepository.findById(QExperiment.experiment.id.eq(ID), createFeatureConstructiorExpression())).thenReturn(create(ID, null));
+		Mockito.when(experimentRepository.findById(QExperiment.experiment.id.eq(ID), createFinderFeatureConstructiorExpression())).thenReturn(create(ID, null));
 		Mockito.when(variationRepository.list(QVariation.variation.experiment.id.eq(ID), createABTestConstructor())).thenReturn(Arrays.asList(Variation.builder().id(testId).build()));
 		Experiment sample = service.find(ID);
 		Mockito.verify(variationRepository).list(QVariation.variation.experiment.id.eq(ID), createABTestConstructor());
-		Mockito.verify(experimentRepository).findById(QExperiment.experiment.id.eq(ID), createFeatureConstructiorExpression());
+		Mockito.verify(experimentRepository).findById(QExperiment.experiment.id.eq(ID), createFinderFeatureConstructiorExpression());
 		MatcherAssert.assertThat(sample, Matchers.equalTo(create(ID, null)));
 		MatcherAssert.assertThat(sample.variations, Matchers.hasSize(1));
 		MatcherAssert.assertThat(sample.variations.get(0).id, Matchers.equalTo(testId));
@@ -97,6 +98,10 @@ public class ExperimentLoadServiceTest {
 		return Projections.constructor(Experiment.class,QExperiment.experiment.id, QExperiment.experiment.name, QExperiment.experiment.enabled, QExperiment.experiment.percentage);
 	}
 
+	private ConstructorExpression<Experiment> createFinderFeatureConstructiorExpression() {
+		return Projections.constructor(Experiment.class,QExperiment.experiment.id, QExperiment.experiment.name, QExperiment.experiment.enabled, QExperiment.experiment.percentage, QExperiment.experiment.domains, QExperiment.experiment.groups, QExperiment.experiment.users);
+	}
+	
 	private Predicate getFilter(String schearch) {
 		return QExperiment.experiment.name.containsIgnoreCase(schearch);
 	}

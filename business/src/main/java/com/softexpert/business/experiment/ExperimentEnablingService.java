@@ -1,4 +1,4 @@
-package com.softexpert.business;
+package com.softexpert.business.experiment;
 
 
 import javax.ejb.Stateless;
@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 import com.softexpert.business.exception.ExperimentEnablingException;
 import com.softexpert.persistence.QExperiment;
-import com.softexpert.repository.ExperimentRepository;
+import com.softexpert.repository.experiment.ExperimentRepository;
 
 @Stateless
 public class ExperimentEnablingService {

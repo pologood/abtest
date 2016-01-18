@@ -1,4 +1,4 @@
-package com.softexpert.repository;
+package com.softexpert.repository.experiment;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;

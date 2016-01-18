@@ -1,4 +1,4 @@
-package com.softexpert.business;
+package com.softexpert.business.experiment;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,8 +9,9 @@ import org.mockito.MockitoAnnotations;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.softexpert.business.exception.ExperimentEnablingException;
+import com.softexpert.business.experiment.ExperimentEnablingService;
 import com.softexpert.persistence.QExperiment;
-import com.softexpert.repository.ExperimentRepository;
+import com.softexpert.repository.experiment.ExperimentRepository;
 
 public class ExperimentEnablingServiceTest {
 
