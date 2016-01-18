@@ -38,7 +38,6 @@ public class ExperimentsSortitionServiceTest {
 	@Mock
 	private ExperimentsSortitionService experimentsSortitionService;
 
-
 	@Before
 	public void init() {
 		MockitoAnnotations.initMocks(this);
@@ -84,16 +83,6 @@ public class ExperimentsSortitionServiceTest {
 		MatcherAssert.assertThat(experiments.get(0).name, Matchers.equalTo("DEFAULT_FRAME"));
 		MatcherAssert.assertThat(experiments.get(0).variationName, Matchers.equalTo("NEW"));
 		Mockito.verify(userSaveService, Mockito.never()).save(Mockito.any(User.class), Mockito.anyList());
-	}
-
-	public void randomWithIlegibileUser() throws AppException {
-		mock(createSimpleUserExperiments("NEW"));
-		List<ExperimentDTO> experiments = service.sortionOrSearch(createUser());
-		MatcherAssert.assertThat(experiments, Matchers.hasSize(1));
-		MatcherAssert.assertThat(experiments.get(0).name, Matchers.equalTo("DEFAULT_FRAME"));
-		MatcherAssert.assertThat(experiments.get(0).variationName, Matchers.nullValue());
-		Mockito.verify(userSaveService).save(Mockito.any(User.class), Mockito.anyList());
-
 	}
 
 	private User createExistentUser() {
