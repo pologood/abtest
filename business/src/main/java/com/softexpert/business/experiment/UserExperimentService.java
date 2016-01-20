@@ -12,7 +12,7 @@ import com.softexpert.business.exception.AppException;
 import com.softexpert.business.sortition.ExperimentsSortitionService;
 import com.softexpert.business.user.UserSaveService;
 import com.softexpert.business.user.UserSearchService;
-import com.softexpert.dto.ExperimentDTO;
+import com.softexpert.dto.UserExperimentDTO;
 import com.softexpert.dto.UserDTO;
 import com.softexpert.persistence.User;
 import com.softexpert.persistence.UserExperiment;
@@ -28,22 +28,22 @@ public class UserExperimentService {
 	private ExperimentsSortitionService experimentsSortitionService;
 
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<ExperimentDTO> sortionOrSearch(UserDTO userDTO) throws AppException {
+	public List<UserExperimentDTO> sortionOrSearch(UserDTO userDTO) throws AppException {
 		User user = userExperimentService.search(userDTO);
 		if (user == null)
 			return sortitionNewUser(userDTO);
 		return toDto(user.experiments);
 	}
 
-	private List<ExperimentDTO> sortitionNewUser(UserDTO userDTO) throws AppException {
+	private List<UserExperimentDTO> sortitionNewUser(UserDTO userDTO) throws AppException {
 		User user = getUser(userDTO);
 		List<UserExperiment> experiments = experimentsSortitionService.sortition(user);
 		userSaveService.save(user, experiments);
 		return toDto(experiments);
 	}
 
-	private ExperimentDTO toDto(UserExperiment userExperiment) {
-		return ExperimentDTO.builder()
+	private UserExperimentDTO toDto(UserExperiment userExperiment) {
+		return UserExperimentDTO.builder()
 				.name(userExperiment.experiment.name)
 				.variationName(userExperiment.variation.name)
 				.build();
@@ -59,8 +59,8 @@ public class UserExperimentService {
 				.build();
 	}
 
-	private List<ExperimentDTO> toDto(List<UserExperiment> userExperiments) {
-		List<ExperimentDTO> experiments = new ArrayList<>();
+	private List<UserExperimentDTO> toDto(List<UserExperiment> userExperiments) {
+		List<UserExperimentDTO> experiments = new ArrayList<>();
 		userExperiments.stream().forEach(userExperiment -> experiments.add(toDto(userExperiment)));
 		return experiments;
 	}

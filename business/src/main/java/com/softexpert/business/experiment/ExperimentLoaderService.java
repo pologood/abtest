@@ -14,6 +14,7 @@ import com.google.common.base.Strings;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
 import com.softexpert.business.exception.AppException;
+import com.softexpert.dto.ExperimentDTO;
 import com.softexpert.persistence.Experiment;
 import com.softexpert.persistence.QVariation;
 import com.softexpert.persistence.Variation;
@@ -32,9 +33,10 @@ public class ExperimentLoaderService {
 	private VariationRepository variationsRepository;
 
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public Experiment find(Long id) throws AppException {
+	public ExperimentDTO find(Long id) throws AppException {
 		try {
-			Experiment feature = experimentRepository.findById(experiment.id.eq(id), createAllConstructiorExpression());
+			ExperimentDTO feature = experimentRepository.findById(experiment.id.eq(id),
+					createAllConstructiorExpression());
 			feature.variations = variationsRepository.list(QVariation.variation.experiment.id.eq(id),
 					createABTestExpressionConstructor());
 			return feature;
@@ -60,9 +62,9 @@ public class ExperimentLoaderService {
 				experiment.percentage);
 	}
 
-	private ConstructorExpression<Experiment> createAllConstructiorExpression() {
-		return Projections.constructor(Experiment.class, experiment.id, experiment.name, experiment.enabled,
-				experiment.percentage, experiment.domains, experiment.groups, experiment.users);
+	private ConstructorExpression<ExperimentDTO> createAllConstructiorExpression() {
+		return Projections.constructor(ExperimentDTO.class, experiment.id, experiment.name, experiment.description,
+				experiment.domains, experiment.groups, experiment.users, experiment.enabled, experiment.percentage);
 	}
 
 }

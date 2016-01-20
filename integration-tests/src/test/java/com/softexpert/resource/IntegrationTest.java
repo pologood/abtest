@@ -9,13 +9,11 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
 import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Before;
-import org.junit.runner.RunWith;
 
 public class IntegrationTest {
 
@@ -31,7 +29,7 @@ public class IntegrationTest {
 				.withTransitivity().asFile();
 		return ShrinkWrap.create(WebArchive.class).setWebXML(webXML).addAsLibraries(archives);
 	}
-	
+
 	@Before
 	public void init() throws Exception {
 		Client client = ClientBuilder.newClient();

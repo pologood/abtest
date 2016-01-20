@@ -60,14 +60,16 @@ public class Experiment {
 		this.percentage = percentage;
 	}
 
-	public Experiment(Long id, String name, Boolean enabled, BigDecimal percentage, String domains, String groups,
-			String users) {
+	public Experiment(Long id, String name, String description, Boolean enabled, BigDecimal percentage, String domains,
+			String groups, String users) {
 		this.id = id;
 		this.name = name;
+		this.description = description;
 		this.enabled = enabled;
 		this.percentage = percentage;
 		this.domains = domains;
 		this.groups = groups;
 		this.users = users;
 	}
+
 }
