@@ -19,6 +19,7 @@ import com.softexpert.business.exception.AppException;
 import com.softexpert.business.exception.ExperimentEnablingException;
 import com.softexpert.business.experiment.ExperimentEnablingService;
 import com.softexpert.business.experiment.ExperimentLoaderService;
+import com.softexpert.dto.ExperimentDTO;
 import com.softexpert.persistence.Experiment;
 
 @Path("experiments")
@@ -45,14 +46,14 @@ public class ExperimentResource {
 
 	@GET
 	@Path("/{id}")
-	public Experiment find(@PathParam("id") Long id)throws AppException {
+	public ExperimentDTO find(@PathParam("id") Long id) throws AppException {
 		return service.find(id);
 	}
-	
+
 	@PUT
 	@Path("/{id}/enabling")
 	public void enabling(@PathParam("id") Long id, Boolean enabling) throws ExperimentEnablingException {
 		experimentEnablingService.enabling(id, enabling);
-	}	
+	}
 
 }

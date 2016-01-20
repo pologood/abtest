@@ -13,12 +13,13 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.softexpert.dto.ExperimentDTO;
 import com.softexpert.dto.UserDTO;
 import com.softexpert.persistence.Experiment;
 import com.softexpert.persistence.Variation;
 
 @RunWith(Arquillian.class)
-public class ExperimentResourceIT extends IntegrationTest{
+public class ExperimentResourceIT extends IntegrationTest {
 
 	@Test
 	public void getSamples() throws Exception {
@@ -29,7 +30,7 @@ public class ExperimentResourceIT extends IntegrationTest{
 	@Test
 	public void post() throws Exception {
 		String name = "name";
-		Experiment entity = post(name, true, null);
+		Experiment entity = post(name, "Test", true, null);
 		MatcherAssert.assertThat(entity.id, Matchers.notNullValue());
 		MatcherAssert.assertThat(entity.name, Matchers.equalTo(name));
 	}
@@ -37,30 +38,42 @@ public class ExperimentResourceIT extends IntegrationTest{
 	@Test
 	public void postTests() throws Exception {
 		String name = "name";
+		String description = "description";
 		List<Variation> tests = Arrays.asList(Variation.builder().name("A").build(),
 				Variation.builder().name("B").build());
-		Experiment entity = find(post(name, true, tests).id);
+		Experiment experiment = post(name, description, true, tests);
+		Long id = experiment.id;
+		ExperimentDTO entity = find(id);
 		MatcherAssert.assertThat(entity.variations, Matchers.hasSize(2));
+		MatcherAssert.assertThat(entity.name, Matchers.equalTo(name));
+		MatcherAssert.assertThat(entity.description, Matchers.equalTo(description));
+		MatcherAssert.assertThat(entity.users, Matchers.contains("A", "B"));
+		MatcherAssert.assertThat(entity.domains, Matchers.contains("E", "F"));
+		MatcherAssert.assertThat(entity.groups, Matchers.contains("C", "D"));
+		MatcherAssert.assertThat(entity.percentage, Matchers.closeTo(BigDecimal.TEN, new BigDecimal(0.01D)));
+		MatcherAssert.assertThat(entity.enabled, Matchers.is(true));
+		MatcherAssert.assertThat(entity.variations.get(0).name, Matchers.equalTo("A"));
+		MatcherAssert.assertThat(entity.variations.get(1).name, Matchers.equalTo("B"));
 	}
 
 	@Test
 	public void list() throws Exception {
 		String name = "new name " + System.currentTimeMillis();
-		post(name, true, null);
+		post(name, name, true, null);
 		List<Experiment> list = list(name);
 		MatcherAssert.assertThat(list, Matchers.hasSize(1));
 	}
 
 	@Test
 	public void disable() throws Exception {
-		Experiment entity = post("disable", true, null);
+		Experiment entity = post("disable", "Disable test", true, null);
 		int httpStatus = enabling(entity.id, false);
 		MatcherAssert.assertThat(httpStatus, Matchers.equalTo(204));
 	}
 
 	@Test
 	public void disableWithError() throws Exception {
-		Experiment entity = post("disable2", true, null);
+		Experiment entity = post("disable2", "Disable test", true, null);
 		enabling(entity.id, false);
 		int httpStatus = enabling(entity.id, false);
 		MatcherAssert.assertThat(httpStatus, Matchers.equalTo(404));
@@ -68,14 +81,14 @@ public class ExperimentResourceIT extends IntegrationTest{
 
 	@Test
 	public void enabled() throws Exception {
-		Experiment entity = post("enabled", false, null);
+		Experiment entity = post("enabled", "Disable test", false, null);
 		int httpStatus = enabling(entity.id, true);
 		MatcherAssert.assertThat(httpStatus, Matchers.equalTo(204));
 	}
 
 	@Test
 	public void enabledWithError() throws Exception {
-		Experiment entity = post("enabled2", false, null);
+		Experiment entity = post("enabled2", "Disable test", false, null);
 		enabling(entity.id, true);
 		int httpStatus = enabling(entity.id, true);
 		MatcherAssert.assertThat(httpStatus, Matchers.equalTo(404));
@@ -89,12 +102,13 @@ public class ExperimentResourceIT extends IntegrationTest{
 		post(experiment);
 		String experiments = random(UserDTO.builder().name("Alisson Medeiros").login("alisson.muller")
 				.host("www.softexpert.com").department("TEC").build());
-		MatcherAssert.assertThat(experiments, Matchers.equalTo("[{\"name\":\"DEFAULT_FRAME\",\"variationName\":\"NEW\"}]"));
+		MatcherAssert.assertThat(experiments,
+				Matchers.equalTo("[{\"name\":\"DEFAULT_FRAME\",\"variationName\":\"NEW\"}]"));
 	}
 
-	private Experiment post(String name, boolean enabled, List<Variation> tests) {
-		return post(Experiment.builder().name(name).enabled(enabled).percentage(BigDecimal.TEN).variations(tests)
-				.users("A,B").build());
+	private Experiment post(String name, String description, boolean enabled, List<Variation> tests) {
+		return post(Experiment.builder().name(name).description(description).enabled(enabled).percentage(BigDecimal.TEN)
+				.variations(tests).users("A;B").groups("C;D").domains("E;F").build());
 	}
 
 	private Experiment post(Experiment entity) {
@@ -112,9 +126,9 @@ public class ExperimentResourceIT extends IntegrationTest{
 				.accept(MediaType.APPLICATION_JSON).get(List.class);
 	}
 
-	private Experiment find(long id) {
+	private ExperimentDTO find(long id) {
 		return target.path("/v1/experiments/" + id).request(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON).get(Experiment.class);
+				.accept(MediaType.APPLICATION_JSON).get(ExperimentDTO.class);
 	}
 
 	private int enabling(long id, boolean state) {
