@@ -1,12 +1,29 @@
 {
-  "AWSEBDockerrunVersion": "1",
-  "Image": {
-    "Name": "alissonmedeiros/abtest:%BUILD_NUM%",
-    "Update": "true"
-  },
-  "Ports": [
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
     {
-      "ContainerPort": "8080"
+      "name": "abtest-backend",
+      "image": "alissonmedeiros/abtest:%BUILD_NUM%",
+      "essential": true,
+      "memory": 768,
+      "portMappings": [
+        {
+          "hostPort": 8080,
+          "containerPort": 8080
+        }
+      ]
+    },
+    {
+      "name": "abtest-frontend",
+      "image": "fedevegili/abtest-frontend:146",
+      "essential": true,
+      "memory": 256,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }
+      ]
     }
   ]
 }
