@@ -28,7 +28,7 @@ public class UserExperimentService {
 	private ExperimentsSortitionService experimentsSortitionService;
 
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-	public List<UserExperimentDTO> sortionOrSearch(UserDTO userDTO) throws AppException {
+	public List<UserExperimentDTO> sortitionOrSearch(UserDTO userDTO) throws AppException {
 		User user = userExperimentService.search(userDTO);
 		if (user == null)
 			return sortitionNewUser(userDTO);

@@ -47,7 +47,7 @@ public class ExperimentsSortitionServiceTest {
 	public void randomWithAllUsersWithVariation() throws AppException {
 		UserDTO createUser = createUser();
 		mock(createSimpleUserExperiments());
-		List<UserExperimentDTO> experiments = service.sortionOrSearch(createUser);
+		List<UserExperimentDTO> experiments = service.sortitionOrSearch(createUser);
 		MatcherAssert.assertThat(experiments, Matchers.hasSize(1));
 		MatcherAssert.assertThat(experiments.get(0).name, Matchers.equalTo("DEFAULT_FRAME"));
 		MatcherAssert.assertThat(experiments.get(0).variationName, Matchers.nullValue());
@@ -57,7 +57,7 @@ public class ExperimentsSortitionServiceTest {
 	@Test
 	public void randomWithAllUsersSimpleExperiment() throws AppException {
 		mock(createSimpleUserExperiments("NEW"));
-		List<UserExperimentDTO> experiments = service.sortionOrSearch(createUser());
+		List<UserExperimentDTO> experiments = service.sortitionOrSearch(createUser());
 		MatcherAssert.assertThat(experiments.get(0).name, Matchers.equalTo("DEFAULT_FRAME"));
 		MatcherAssert.assertThat(experiments.get(0).variationName, Matchers.equalTo("NEW"));
 		Mockito.verify(userSaveService).save(Mockito.any(User.class), Mockito.anyList());
@@ -69,7 +69,7 @@ public class ExperimentsSortitionServiceTest {
 				createUserExperiment("DASHBOARD", new BigDecimal(50D), "NEW"),
 				createUserExperiment("CHATS", new BigDecimal(0D)),
 				createUserExperiment("PORTAL", new BigDecimal(0D), "NEW")));
-		List<UserExperimentDTO> experiments = service.sortionOrSearch(createUser());
+		List<UserExperimentDTO> experiments = service.sortitionOrSearch(createUser());
 		MatcherAssert.assertThat(experiments, Matchers.hasSize(4));
 		Mockito.verify(userSaveService).save(Mockito.any(User.class), Mockito.anyList());
 	}
@@ -78,7 +78,7 @@ public class ExperimentsSortitionServiceTest {
 	public void randomWithExistentUser() throws AppException {
 		UserDTO userDTO = createUser();
 		Mockito.when(userExperimentService.search(userDTO)).thenReturn(createExistentUser());
-		List<UserExperimentDTO> experiments = service.sortionOrSearch(createUser());
+		List<UserExperimentDTO> experiments = service.sortitionOrSearch(createUser());
 		MatcherAssert.assertThat(experiments, Matchers.hasSize(1));
 		MatcherAssert.assertThat(experiments.get(0).name, Matchers.equalTo("DEFAULT_FRAME"));
 		MatcherAssert.assertThat(experiments.get(0).variationName, Matchers.equalTo("NEW"));

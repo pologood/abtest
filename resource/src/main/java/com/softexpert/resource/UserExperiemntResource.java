@@ -25,7 +25,7 @@ public class UserExperiemntResource {
 
 	@POST
 	public List<UserExperimentDTO> random(UserDTO user) throws AppException {
-		return service.sortionOrSearch(user);
+		return service.sortitionOrSearch(user);
 	}
 
 }

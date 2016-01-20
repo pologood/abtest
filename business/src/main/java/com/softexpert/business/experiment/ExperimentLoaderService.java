@@ -35,8 +35,7 @@ public class ExperimentLoaderService {
 	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public ExperimentDTO find(Long id) throws AppException {
 		try {
-			ExperimentDTO feature = experimentRepository.findById(experiment.id.eq(id),
-					createAllConstructiorExpression());
+			ExperimentDTO feature = experimentRepository.findById(experiment.id.eq(id), createAllArgsConstructitor());
 			feature.variations = variationsRepository.list(QVariation.variation.experiment.id.eq(id),
 					createABTestExpressionConstructor());
 			return feature;
@@ -62,7 +61,7 @@ public class ExperimentLoaderService {
 				experiment.percentage);
 	}
 
-	private ConstructorExpression<ExperimentDTO> createAllConstructiorExpression() {
+	private ConstructorExpression<ExperimentDTO> createAllArgsConstructitor() {
 		return Projections.constructor(ExperimentDTO.class, experiment.id, experiment.name, experiment.description,
 				experiment.domains, experiment.groups, experiment.users, experiment.enabled, experiment.percentage);
 	}
