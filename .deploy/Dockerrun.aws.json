@@ -3,25 +3,13 @@
   "containerDefinitions": [
     {
       "name": "abtest-backend",
-      "image": "alissonmedeiros/abtest:%BUILD_NUM%",
+      "image": "alissonmedeiros/abtest:107",
       "essential": true,
       "memory": 768,
       "portMappings": [
         {
           "hostPort": 8080,
           "containerPort": 8080
-        }
-      ]
-    },
-    {
-      "name": "abtest-frontend",
-      "image": "fedevegili/abtest-frontend:146",
-      "essential": true,
-      "memory": 256,
-      "portMappings": [
-        {
-          "hostPort": 81,
-          "containerPort": 80
         }
       ]
     }
