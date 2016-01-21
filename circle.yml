@@ -1,3 +1,4 @@
+
 machine:
   java:
     version: oraclejdk8
@@ -12,7 +13,9 @@ dependencies:
   - mvn install
 test:
   override:
-    - mvn integration-test
+    - mvn integration-test -Pproduction
+  post:
+    - mvn cobertura:cobertura -Pproduction org.eluder.coveralls:coveralls-maven-plugin:report -DrepoToken="$COVERALLS_TOKEN"
 deployment:
   production:
     branch: master
